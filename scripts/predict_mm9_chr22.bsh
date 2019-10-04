@@ -1,0 +1,15 @@
+bw_plus=/fs/cbsudanko/storage/data/mm9/esc/groseq/GSE48895_V6.5_untreated_Plus.bw
+bw_minus=/fs/cbsudanko/storage/data/mm9/esc/groseq/GSE48895_V6.5_untreated_Minus.bw
+
+Model=../models/H3k27me3.S1.V3.train.rdata
+Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k27me3/h3k27me3.extend.bw
+output=H3k27me3.S1.V3.mm9
+R --vanilla --slave --args  $Model $bw_plus $bw_minus  $output  chr19  $Histone 1 <  demo.hist.pred.chr.R >  $output.out
+mail -s 'X3' 'zw355@cornell.edu' < /dev/null
+
+Model=../models/H3k4me3.S1.V3.train.rdata
+Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k4me3/h3k4me3.extend.bw
+output=H3k4me3.S1.V3.mm9
+R --vanilla --slave --args  $Model $bw_plus $bw_minus  $output  chr19  $Histone 1 <  demo.hist.pred.chr.R >  $output.out
+mail -s 'X7' 'zw355@cornell.edu' < /dev/null
+

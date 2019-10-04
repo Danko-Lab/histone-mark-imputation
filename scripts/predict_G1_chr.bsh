@@ -1,0 +1,109 @@
+CHRQ=$1
+HIST=$2
+BW_PLUS=$3
+BW_MINUS=$4
+OUT_PREFIX=$5
+
+
+if [ -z $BW_PLUS ]
+then
+  G1_plus=../../prj10-dreg/k562/K562_unt.sort.bed.gz_plus.bw
+  G1_minus=../../prj10-dreg/k562/K562_unt.sort.bed.gz_minus.bw
+else
+  G1_plus=$BW_PLUS
+  G1_minus=$BW_MINUS
+  OUT_PREFIX=G1
+fi
+
+echo $G1_plus
+echo $G1_minus
+
+if [ "$HIST" = "H3k122ac" ] || [ -z $HIST ]
+then
+  Model=../models/H3k122ac.S1.V3.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/GSM2054695_K562_H3K122ac.10bpres.bigWig
+  output=H3k122ac.S1.V3.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ  $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X1' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k27ac" ] || [ -z $HIST ]
+then
+  Model=../models/H3k27ac.S1.V3.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k27acStdSig.bigWig
+  output=H3k27ac.S1.V3.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ  $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X2' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k27me3" ] || [ -z $HIST ]
+then
+  Model=../models/H3k27me3.S1.V3.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k27me3StdSig.bigWig
+  output=H3k27me3.S1.V3.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ  $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X3' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k36me3" ] || [ -z $HIST ]
+then
+  Model=../models/H3k36me3.S1.V3.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k36me3StdSig.bigWig
+  output=H3k36me3.S1.V3.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ  $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X4' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k4me1" ] || [ -z $HIST ]
+then
+  Model=../models/H3k4me1.S1.V2.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k4me1StdSig.bigWig
+  output=H3k4me1.S1.V2.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ  $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X5' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k4me2" ] || [ -z $HIST ]
+then
+  Model=../models/H3k4me2.S1.V2.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k4me2StdSig.bigWig
+  output=H3k4me2.S1.V2.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ  $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X6' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k4me3" ] || [ -z $HIST ]
+then
+  Model=../models/H3k4me3.S1.V3.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k4me3StdSig.bigWig
+  output=H3k4me3.S1.V3.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ  $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X7' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k9ac" ] || [ -z $HIST ]
+then
+  Model=../models/H3k9ac.S1.V2.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k9acStdSig.bigWig
+  output=H3k9ac.S1.V2.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ  $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X8' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k9me3" ] || [ -z $HIST ]
+then
+  Model=../models/H3k9me3.S1.V2.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k9me3StdSig.bigWig
+  output=H3k9me3.S1.V2.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ  $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X9' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H4k20me1" ] || [ -z $HIST ]
+then
+  Model=../models/H4k20me1.S1.V3.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H4k20me1StdSig.bigWig
+  output=H4k20me1.S1.V3.${OUT_PREFIX}
+  R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   $CHRQ $Histone<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X10' 'zw355@cornell.edu' < /dev/null
+fi

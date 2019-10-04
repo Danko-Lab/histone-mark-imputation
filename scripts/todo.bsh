@@ -1,0 +1,26 @@
+bash predict_G1_chr.bsh chr7 H4k20me1
+
+bash predict_G1_chr.bsh chr7 H3k36me3
+
+bash predict_G1_chr.bsh chr7 H3k4me1
+
+bash predict_G1_chr.bsh chr7 H3k9me3
+
+bash predict_G1_chr.bsh chr7 H3k9ac
+
+bash predict_G1_chr.bsh chr7 H3k4me3
+
+bash predict_G1_chr.bsh chr7 H3k4me2
+
+bash predict_G1_chr.bsh chr11 H3k122ac
+
+bash predict_G1_chr.bsh chr2 H3k4me3
+
+
+bash predict_G1_chr.bsh chr1 H3k27ac ../horse_don/PROseq_liver_merge_R1.plus.bw ../horse_don/PROseq_liver_merge_R1.minus.bw
+
+bash predict_G1_chr.bsh chr1 H3k4me1 ../horse_don/PROseq_liver_merge_R1.plus.bw ../horse_don/PROseq_liver_merge_R1.minus.bw
+
+bash predict_G1_chr.bsh chr1 H3k4me3 ../horse_don/PROseq_liver_merge_R1.plus.bw ../horse_don/PROseq_liver_merge_R1.minus.bw
+
+bash predict_G1_chr.bsh chr1 H3k27me3 ../horse_don/PROseq_liver_merge_R1.plus.bw ../horse_don/PROseq_liver_merge_R1.minus.bw

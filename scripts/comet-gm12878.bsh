@@ -1,0 +1,17 @@
+sbatch -A crl159 -J H3k27ac  -o H3k27ac.o_%j.log  -e H3k27ac.e_%j.log  -p gpu --gres=gpu:4 -N 1 -t 48:00:00 --mem=120GB  --wrap "bash predict_GM_all.bsh all H3k27ac 4 > H3k27ac.GM.out"
+
+sbatch -A crl159 -J H3k27me3 -o H3k27me3.o_%j.log -e H3k27me3.e_%j.log -p gpu --gres=gpu:4 -N 1 -t 48:00:00 --mem=120GB  --wrap "bash predict_GM_all.bsh all H3k27me3 4 > H3k27me3.GM.out"
+
+sbatch -A crl157 -J H3k36me3 -o H3k36me3.o_%j.log -e H3k36me3.e_%j.log -p gpu --gres=gpu:4 -N 1 -t 48:00:00 --mem=120GB  --wrap "bash predict_GM_all.bsh all H3k36me3 3 > H3k36me3.GM.out"
+
+sbatch -A crl159 -J H3k4me1  -o H3k4me1.o_%j.log  -e H3k4me1.e_%j.log  -p gpu --gres=gpu:4 -N 1 -t 48:00:00 --mem=120GB  --wrap "bash predict_GM_all.bsh all H3k4me1 3 > H3k4me1.GM.out"
+ 
+sbatch -A crl159 -J H3k4me2  -o H3k4me2.o_%j.log  -e H3k4me2.e_%j.log  -p gpu --gres=gpu:4 -N 1 -t 48:00:00 --mem=120GB  --wrap "bash predict_GM_all.bsh all H3k4me2 4 > H3k4me2.GM.out"
+
+sbatch -A crl159 -J H3k4me3  -o H3k4me3.o_%j.log  -e H3k4me3.e_%j.log  -p gpu --gres=gpu:4 -N 1 -t 48:00:00 --mem=120GB  --wrap "bash predict_GM_all.bsh all H3k4me3 4 > H3k4me3.GM.out"
+
+sbatch -A crl159 -J H3k9ac   -o H3k9ac.o_%j.log   -e H3k9ac.e_%j.log   -p gpu --gres=gpu:4 -N 1 -t 48:00:00 --mem=120GB  --wrap "bash predict_GM_all.bsh all H3k9ac 4 > H3k9ac.GM.out"
+
+sbatch -A crl157 -J H3k9me3  -o H3k9me3.o_%j.log  -e H3k9me3.e_%j.log  -p gpu --gres=gpu:4 -N 1 -t 48:00:00 --mem=120GB  --wrap "bash predict_GM_all.bsh all H3k9me3 3 > H3k9me3.GM.out"
+
+sbatch -A crl157 -J H4k20me1 -o H4k20me1.o_%j.log -e H4k20me1.e_%j.log -p gpu --gres=gpu:4 -N 1 -t 48:00:00 --mem=120GB  --wrap "bash predict_GM_all.bsh all H4k20me1 3 > H4k20me1.GM.out"

@@ -1,0 +1,22 @@
+Model=../models/H3k4me3.S1.V3.train.rdata
+Histone=/local/workdir/zw355/proj/prj15-histone/Prophase1/GSE52628_H3K4me3_B6_merge_ChIP.bw
+
+bw_plus=/local/workdir/zw355/proj/prj15-histone/Prophase1/P_merged_all_plus.bw
+bw_minus=/local/workdir/zw355/proj/prj15-histone/Prophase1/P_merged_all_minus.bw
+output=P.mm10.H3k4me3.S1.V3
+R --vanilla --slave --args  $Model $bw_plus $bw_minus  $output  chr1  $Histone 1 <  demo.hist.pred.chr.R >  $output.out
+mail -s 'X1' 'zw355@cornell.edu' < /dev/null
+
+
+bw_plus=/local/workdir/zw355/proj/prj15-histone/Prophase1/D_merged_all_plus.bw
+bw_minus=/local/workdir/zw355/proj/prj15-histone/Prophase1/D_merged_all_minus.bw
+output=D.mm10.H3k4me3.S1.V3
+R --vanilla --slave --args  $Model $bw_plus $bw_minus  $output  chr1  $Histone 1 <  demo.hist.pred.chr.R >  $output.out
+mail -s 'X2' 'zw355@cornell.edu' < /dev/null
+
+bw_plus=/local/workdir/zw355/proj/prj15-histone/Prophase1/LZ_merged_all_plus.bw
+bw_minus=/local/workdir/zw355/proj/prj15-histone/Prophase1/LZ_merged_all_minus.bw
+output=LZ.mm10.H3k4me3.S1.V3
+R --vanilla --slave --args  $Model $bw_plus $bw_minus  $output  chr1  $Histone 1 <  demo.hist.pred.chr.R >  $output.out
+mail -s 'X3' 'zw355@cornell.edu' < /dev/null
+
