@@ -1,0 +1,112 @@
+CHRQ=$1
+GPU_COUNT=$2
+HIST=$3
+BW_PLUS=$4
+BW_MINUS=$5
+Cell=HELA
+
+if [ -z $BW_PLUS ]
+then
+  plus=../hela/hela_groseq_plus.bigWig
+  minus=../hela/hela_groseq_minus.bigWig
+else
+  plus=$BW_PLUS
+  minus=$BW_MINUS
+fi
+
+echo $plus
+echo $minus
+echo $CHRQ
+echo $HIST
+
+#if [ "$HIST" = "H3k122ac" ] || [ -z $HIST ]
+#then
+#  Model=../models/H3k122ac.S1.V3.train.rdata
+#  Histone=/fs/cbsudanko/storage/data/hg19/k562/histone/GSM2054695_K562_H3K122ac.10bpres.bigWig
+#  output=H3k122ac.S1.V3.${Cell}
+#  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ  $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+#  mail -s 'X1' 'zw355@cornell.edu' < /dev/null
+#fi
+
+if [ "$HIST" = "H3k27ac" ] || [ -z $HIST ]
+then
+  Model=../models/H3k27ac.S1.V3.train.rdata
+  Histone=../gm12878/histone/wgEncodeBroadHistoneGm12878H3k27acStdSig.bigWig
+  output=H3k27ac.S1.V3.${Cell}
+  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ  $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X2' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k27me3" ] || [ -z $HIST ]
+then
+  Model=../models/H3k27me3.S1.V3.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k27me3/h3k27me3.extend.bw
+  output=H3k27me3.S1.V3.${Cell}
+  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ  $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X3' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k36me3" ] || [ -z $HIST ]
+then
+  Model=../models/H3k36me3.S1.V3.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k36me3/h3k36me3.extend.bw
+  output=H3k36me3.S1.V3.${Cell}
+  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ  $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X4' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k4me1" ] || [ -z $HIST ]
+then
+  Model=../models/H3k4me1.S1.V2.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k4me1/h3k4me1.extend.bw
+  output=H3k4me1.S1.V2.${Cell}
+  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ  $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X5' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k4me2" ] || [ -z $HIST ]
+then
+  Model=../models/H3k4me2.S1.V2.train.rdata
+  #Histone=../gm12878/histone/wgEncodeBroadHistoneGm12878H3k4me2StdSig.bigWig
+  output=H3k4me2.S1.V2.${Cell}
+  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ  $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X6' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k4me3" ] || [ -z $HIST ]
+then
+  Model=../models/H3k4me3.S1.V3.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k4me3/h3k4me3.extend.bw
+  output=H3k4me3.S1.V3.${Cell}
+  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ  $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X7' 'zw355@cornell.edu' < /dev/null
+fi
+
+
+if [ "$HIST" = "H3k9ac" ] || [ -z $HIST ]
+then
+  Model=../models/H3k9ac.S1.V2.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k9ac/h3k9ac.extend.bw
+  output=H3k9ac.S1.V2.${Cell}
+  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ  $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X8' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H3k9me3" ] || [ -z $HIST ]
+then
+  Model=../models/H3k9me3.S1.V2.train.rdata
+  Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k9me3/h3k9me3.extend.bw
+  output=H3k9me3.S1.V2.${Cell}
+  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ  $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X9' 'zw355@cornell.edu' < /dev/null
+fi
+
+if [ "$HIST" = "H4k20me1" ] || [ -z $HIST ]
+then
+  Model=../models/H4k20me1.S1.V3.train.rdata
+  Histone=../gm12878/histone/wgEncodeBroadHistoneGm12878H4k20me1StdSig.bigWig
+  output=H4k20me1.S1.V3.${Cell}
+  R --vanilla --slave --args  $Model $plus $minus  $output   $CHRQ $Histone $GPU_COUNT<  demo.hist.pred.chr.R >  $output.$CHRQ.out
+  mail -s 'X10' 'zw355@cornell.edu' < /dev/null
+fi
+

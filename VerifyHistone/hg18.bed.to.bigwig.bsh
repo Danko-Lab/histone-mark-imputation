@@ -1,0 +1,26 @@
+function do_cov {
+fullfile=$1
+filename="${fullfile%.*.*}"
+CHAIN=/fs/cbsudanko/storage/data/hg19/hg18ToHg19.over.chain.gz
+CHRINFO=/fs/cbsudanko/storage/data/hg19/hg19.chromInfo
+
+zcat $1 > tmp.bed 
+liftOver tmp.bed $CHAIN tmp.output.bed tmp.unlifted.bed
+awk '{print $1, $2, $3, $5/1000}' tmp.output.bed | sort-bed - >  tmp.sorted.bed 
+#bedClip tmp.sorted.bed   $CHRINFO tmp.clip.bed
+bedtools genomecov -bg  -i tmp.sorted.bed -g $CHRINFO > tmp.sum.bed
+bedGraphToBigWig  tmp.sum.bed  $CHRINFO ${filename}.bigWig
+rm tmp.sorted.bed
+rm tmp.bed
+rm tmp.output.bed
+rm tmp.unlifted.bed
+rm tmp.sum.bed
+}
+
+for f in *.bed.gz 
+do 
+ echo $f 
+ do_cov $f
+done
+
+

@@ -1,0 +1,36 @@
+export PYTHONPATH=/programs/CrossMap-0.2.9/lib64/python2.7/site-packages:/programs/CrossMap-0.2.9/lib/python2.7/site-packages:$PYTHONPATH
+export PATH=/programs/CrossMap-0.2.9/bin:$PATH
+
+## genome liftover
+bigWigToBedGraph   /fs/cbsudanko/storage/data/hg38/k562/histones/GSE103543_AR16_H3K4me3_Corrected_HMD.bigwig GSE103543_AR16_H3K4me3_Corrected_HMD.hg38.bedgraph
+CrossMap.py bed /fs/cbsudanko/storage/data/hg38/hg38ToHg19.over.chain.gz GSE103543_AR16_H3K4me3_Corrected_HMD.hg38.bedgraph GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bedgraph
+sort-bed GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bedgraph | awk '{ if ($4!=0) print $0 }' - > GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.sorted.bedgraph
+R --no-save --args GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.sorted.bedgraph GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bedgraph < removeOverlap.R
+bedGraphToBigWig GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bedgraph /fs/cbsudanko/storage/data/hg19/hg19.chromInfo GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bw
+
+## peak calling
+source /programs/bin/util/setup_macs2.sh
+bigWigToBedGraph GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bw GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bedgraph
+macs2 bdgpeakcall  --cutoff-analysis -i GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bedgraph  --outdir . --o-prefix GSE103543_AR16_H3K4me3_Corrected_HMD.hg19
+macs2 bdgpeakcall  -c 30 -i GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bedgraph  --outdir . --o-prefix GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.peak.bed
+rm GSE103543_AR16_H3K4me3_Corrected_HMD.hg19.bedgraph
+
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM2773nnn/GSM2773401/suppl/GSM2773401%5FAR16%2D4%5FAB%2D12209%5FmQ20%5FL200%5Fgenome%5Fcoverage%2Ebigwig
+
+## genome liftover
+bigWigToBedGraph   /fs/cbsudanko/storage/data/hg38/k562/histones/GSK562_AB-12209_H3K4me3_ICeChIP.GSM2773401_AR16-4_AB-12209_mQ20_L200_genome_coverage.bigwig GSK562_AB-12209_H3K4me3_ICeChIP.hg38.bedgraph
+CrossMap.py bed /fs/cbsudanko/storage/data/hg38/hg38ToHg19.over.chain.gz GSK562_AB-12209_H3K4me3_ICeChIP.hg38.bedgraph  GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bedgraph
+sort-bed GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bedgraph | awk '{ if ($4!=0) print $0 }' - > GSK562_AB-12209_H3K4me3_ICeChIP.hg19.sorted.bedgraph
+R --no-save --args GSK562_AB-12209_H3K4me3_ICeChIP.hg19.sorted.bedgraph GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bedgraph < removeOverlap.R
+bedGraphToBigWig GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bedgraph /fs/cbsudanko/storage/data/hg19/hg19.chromInfo GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bw
+
+## peak calling
+source /programs/bin/util/setup_macs2.sh
+bigWigToBedGraph GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bw  GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bedgraph
+macs2 bdgpeakcall --cutoff-analysis -i GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bedgraph  --outdir . --o-prefix GSK562_AB-12209_H3K4me3_ICeChIP.hg19
+macs2 bdgpeakcall -c 25 -i GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bedgraph  --outdir . --o-prefix GSK562_AB-12209_H3K4me3_ICeChIP.hg19.peak.bed
+rm GSK562_AB-12209_H3K4me3_ICeChIP.hg19.bedgraph
+
+
+#training models on chr1-21 and predict on chr. 22
+#compare windows on chr.22 

@@ -1,0 +1,11 @@
+zcat CFP1.C169A.H3k4me3.S1.peak.bed.gz | awk 'BEGIN{OFS="\t"}{print $1, $2, $3, $4}' - > CFP1.C169A.H3k4me3.S1.peak.bed2 
+zcat CFP1.wt_resuce.H3k4me3.S1.peak.bed.gz | awk 'BEGIN{OFS="\t"}{print $1, $2, $3, $4}' - > CFP1.wt_resuce.H3k4me3.S1.peak.bed2 
+zcat CFP1.ko.H3k4me3.S1.peak.bed.gz | awk 'BEGIN{OFS="\t"}{print $1, $2, $3, $4}' - > CFP1.ko.H3k4me3.S1.peak.bed2 
+
+
+bedGraphToBigWig CFP1.wt.H3k4me3.S1.peak.bed2   /fs/cbsudanko/storage/data/mm10/mm10.chromInfo   raw.CFP1.wt.H3k4me3.S1.peak.bw
+bedGraphToBigWig CFP1.C169A.H3k4me3.S1.peak.bed2   /fs/cbsudanko/storage/data/mm10/mm10.chromInfo  raw.CFP1.C169A.H3k4me3.S1.peak.bw
+bedGraphToBigWig CFP1.wt_resuce.H3k4me3.S1.peak.bed2   /fs/cbsudanko/storage/data/mm10/mm10.chromInfo raw.CFP1.wt_resuce.H3k4me3.S1.peak.bw
+bedGraphToBigWig CFP1.ko.H3k4me3.S1.peak.bed2   /fs/cbsudanko/storage/data/mm10/mm10.chromInfo   raw.CFP1.ko.H3k4me3.S1.peak.bw
+
+

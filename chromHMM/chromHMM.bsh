@@ -1,0 +1,44 @@
+#K562, orignal
+export PYTHONPATH=$PYTHONPATH:/home/zw355/.local/lib/python2.7/site-packages/
+python  src/chromhmm_signalize.py rebin --binned_dir binned0 input_hist_k562.txt hg19 
+python  src/chromhmm_signalize.py combine --binned_dir binned0 --combined_dir signal0 input_hist_k562.txt 
+java -mx6400M -jar src/ChromHMM.jar BinarizeSignal signal0 chromBins0
+#java -mx6400M -jar src/ChromHMM.jar LearnModel chromBins0 LM_K562_org_seg 18 hg19
+java -mx6400M -jar src/ChromHMM.jar MakeSegmentation model_18_coreK27ac.txt chromBins0 MS_K562_org_seg
+rm -rf signal0
+rm -rf binned0
+rm -rf chromBins0
+
+#K562, raw pred
+export PYTHONPATH=$PYTHONPATH:/home/zw355/.local/lib/python2.7/site-packages/
+python  src/chromhmm_signalize.py rebin --binned_dir binned1  input_raw_pred_k562.txt hg19
+python  src/chromhmm_signalize.py combine --binned_dir binned1 --combined_dir signal1 input_raw_pred_k562.txt 
+java -mx6400M -jar src/ChromHMM.jar BinarizeSignal signal1 chromBins1
+#java -mx6400M -jar src/ChromHMM.jar LearnModel chromBins1 LM_K562_raw_seg 18 hg19
+java -mx6400M -jar src/ChromHMM.jar MakeSegmentation model_18_coreK27ac.txt chromBins1 MS_K562_raw_seg
+rm -rf signal1
+rm -rf binned1
+rm -rf chromBins1
+
+#K562, pred with filter
+export PYTHONPATH=$PYTHONPATH:/home/zw355/.local/lib/python2.7/site-packages/
+python  src/chromhmm_signalize.py rebin  --binned_dir binned2  input_pred_k562.txt hg19
+python  src/chromhmm_signalize.py combine --binned_dir binned2  --combined_dir signal2  input_pred_k562.txt 
+java -mx6400M -jar src/ChromHMM.jar BinarizeSignal signal2 chromBins2
+#java -mx6400M -jar src/ChromHMM.jar LearnModel chromBins2 LM_K562_pred_seg 18 hg19
+java -mx6400M -jar src/ChromHMM.jar MakeSegmentation model_18_coreK27ac.txt chromBins2 MS_K562_pred_seg
+rm -rf signal2
+rm -rf binned2
+rm -rf chromBins2
+
+#GM12878, orignal
+export PYTHONPATH=$PYTHONPATH:/home/zw355/.local/lib/python2.7/site-packages/
+python  src/chromhmm_signalize.py rebin --binned_dir binned3 input_hist_gm12878.txt hg19
+python  src/chromhmm_signalize.py combine --binned_dir binned3  --combined_dir signal3  input_hist_gm12878.txt 
+java -mx6400M -jar src/ChromHMM.jar BinarizeSignal signal3 chromBins3
+#java -mx6400M -jar src/ChromHMM.jar LearnModel chromBins3 LM_gm12878_org_seg 18 hg19
+java -mx6400M -jar src/ChromHMM.jar MakeSegmentation model_18_coreK27ac.txt chromBins3 MS_gm12878_org_seg
+rm -rf signal3
+rm -rf binned3
+rm -rf chromBins3
+

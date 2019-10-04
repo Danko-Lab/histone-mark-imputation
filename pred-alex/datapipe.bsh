@@ -1,0 +1,25 @@
+bigWigToBedGraph /local/workdir/agc94/ChIP_sonication_Nov_2018/bam_files/10069_11142_82835_HTNJHBGX7_me_1_CGATGT.bw Alex.H3k4me1.bedgraph
+bigWigToBedGraph /local/workdir/agc94/ChIP_sonication_Nov_2018/bam_files/10069_11142_82836_HTNJHBGX7_me_2_TTAGGC.bw Alex.H3k4me2.bedgraph
+bigWigToBedGraph /local/workdir/agc94/ChIP_sonication_Nov_2018/bam_files/10069_11142_82837_HTNJHBGX7_me_3_TGACCA.bw Alex.H3k4me3.bedgraph
+bigWigToBedGraph /local/workdir/agc94/ChIP_sonication_Nov_2018/bam_files/10069_11142_82838_HTNJHBGX7_H3k27ac_ACAGTG.bw  Alex.H3k27ac.bedgraph
+
+source /programs/bin/util/setup_macs2.sh
+macs2 bdgpeakcall -i Alex.H3k4me1.bedgraph -c 12  --outdir Alex --o-prefix Alex.H3k4me1
+macs2 bdgpeakcall -i Alex.H3k4me2.bedgraph -c 12  --outdir Alex --o-prefix Alex.H3k4me2
+macs2 bdgpeakcall -i Alex.H3k4me3.bedgraph -c 12  --outdir Alex --o-prefix Alex.H3k4me3
+macs2 bdgpeakcall -i Alex.H3k27ac.bedgraph -c 12  --outdir Alex --o-prefix Alex.H3k27ac
+
+bigWigToBedGraph /local/workdir/agc94/ChIP_sonication_Nov_2018/bam_files/10069_11142_82835_HTNJHBGX7_me_1_CGATGT.bw Alex.Mnase.H3k4me1.bedgraph
+bigWigToBedGraph /local/workdir/agc94/ChIP_sonication_Nov_2018/bam_files/10069_11142_82836_HTNJHBGX7_me_2_TTAGGC.bw Alex.Mnase.H3k4me2.bedgraph
+bigWigToBedGraph /local/workdir/agc94/ChIP_sonication_Nov_2018/bam_files/10069_11142_82837_HTNJHBGX7_me_3_TGACCA.bw Alex.Mnase.H3k4me3.bedgraph
+bigWigToBedGraph /local/workdir/agc94/ChIP_sonication_Nov_2018/bam_files/10069_11142_82838_HTNJHBGX7_H3k27ac_ACAGTG.bw Alex.Mnase.H3k27ac.bedgraph
+bigWigToBedGraph /workdir/zw355/proj/prj15-histone/pred-alex/Alex.Mnase.br1andbr2_0h_K36me3.bw Alex.Mnase.H3k36me3.bedgraph
+
+
+source /programs/bin/util/setup_macs2.sh
+macs2 bdgpeakcall -i Alex.Mnase.H3k4me1.bedgraph -c 12  --outdir Alex --o-prefix Alex.Mnase.H3k4me1
+macs2 bdgpeakcall -i Alex.Mnase.H3k4me2.bedgraph -c 12  --outdir Alex --o-prefix Alex.Mnase.H3k4me2
+macs2 bdgpeakcall -i Alex.Mnase.H3k4me3.bedgraph -c 12  --outdir Alex --o-prefix Alex.Mnase.H3k4me3
+macs2 bdgpeakcall -i Alex.Mnase.H3k27ac.bedgraph -c 12  --outdir Alex --o-prefix Alex.Mnase.H3k27ac
+macs2 bdgpeakcall -i Alex.Mnase.H3k36me3.bedgraph -c 12 --outdir Alex --o-prefix Alex.Mnase.H3k36me3
+

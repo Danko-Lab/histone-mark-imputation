@@ -1,0 +1,6 @@
+histone="$1"
+echo ${histone}.tmp.bed
+zcat ${histone}_chr*.bed.gz | sort-bed - > ${histone}.tmp.bed
+bedGraphToBigWig ${histone}.tmp.bed /fs/cbsudanko/storage/data/hg19/hg19.chromInfo ../${histone}.bw
+## rm ${histone}.tmp.bed
+

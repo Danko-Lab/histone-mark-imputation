@@ -1,0 +1,69 @@
+#
+# Leptotene and Zygotene
+#	
+# GSM3734408 	H3K4me3 ChIP-Seq Leptotene nuclei (Expt R1)
+# GSM3734411 	H3K4me3 ChIP-Seq Leptotene nuclei (Expt R2)
+# GSM3734414 	H3K4me3 ChIP-Seq Zygotene nuclei (Expt R1)
+# GSM3734417 	H3K4me3 ChIP-Seq Zygotene nuclei (Expt R2)
+#
+# Early and late Pachytene 
+#	
+# GSM3734420 	H3K4me3 ChIP-Seq Early Pachytene nuclei (Expt R1)
+# GSM3734423 	H3K4me3 ChIP-Seq Early Pachytene nuclei (Expt R2)
+# GSM3734426 	H3K4me3 ChIP-Seq Late Pachytene nuclei (Expt R1)
+# GSM3734429 	H3K4me3 ChIP-Seq Late Pachytene nuclei (Expt R2)
+#
+# Diplotene
+# 	
+# GSM3734432 	H3K4me3 ChIP-Seq Diplotene nuclei (Expt R1)
+# GSM3734435 	H3K4me3 ChIP-Seq Diplotene nuclei (Expt R2)
+
+
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734408/suppl/GSM3734408%5FLE%2ER1%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734411/suppl/GSM3734411%5FLE%2ER2%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734414/suppl/GSM3734414%5FZY%2ER1%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734417/suppl/GSM3734417%5FZY%2ER2%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734420/suppl/GSM3734420%5FEP%2ER1%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734423/suppl/GSM3734423%5FEP%2ER2%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734426/suppl/GSM3734426%5FLP%2ER1%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734429/suppl/GSM3734429%5FLP%2ER2%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734432/suppl/GSM3734432%5FDI%2ER1%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+wget ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM3734nnn/GSM3734435/suppl/GSM3734435%5FDI%2ER2%2EH3K4me3%2EncisCorrectedByStablePromoters%2Ews25bp%2Ebigwig
+
+
+bash ~/src/proseq2.0/mergeBigWigs.bsh --chrom-info=/fs/cbsudanko/storage/data/mm10/mm10.chromInfo LZ-merged-EncisCorrected.bw  \
+   GSM3734408_LE.R1.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig \
+   GSM3734411_LE.R2.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig \
+   GSM3734414_ZY.R1.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig \
+   GSM3734417_ZY.R2.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig
+
+bash ~/src/proseq2.0/mergeBigWigs.bsh --chrom-info=/fs/cbsudanko/storage/data/mm10/mm10.chromInfo P-merged-EncisCorrected.bw  \
+   GSM3734423_EP.R2.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig \
+   GSM3734420_EP.R1.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig \
+   GSM3734426_LP.R1.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig \ 
+   GSM3734429_LP.R2.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig 
+
+bash ~/src/proseq2.0/mergeBigWigs.bsh --chrom-info=/fs/cbsudanko/storage/data/mm10/mm10.chromInfo D-merged-EncisCorrected.bw  \
+   GSM3734435_DI.R2.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig \
+   GSM3734432_DI.R1.H3K4me3.ncisCorrectedByStablePromoters.ws25bp.bigwig \
+
+
+source /programs/bin/util/setup_macs2.sh
+bigWigToBedGraph LZ-merged-EncisCorrected.bw LZ-merged-EncisCorrected.bed
+bigWigToBedGraph P-merged-EncisCorrected.bw P-merged-EncisCorrected.bed
+bigWigToBedGraph D-merged-EncisCorrected.bw D-merged-EncisCorrected.bed
+
+macs2 bdgpeakcall  --cutoff-analysis -i LZ-merged-EncisCorrected.bed  --outdir . --o-prefix LZ-merged-EncisCorrected.bed
+macs2 bdgpeakcall  --cutoff-analysis -i P-merged-EncisCorrected.bed   --outdir . --o-prefix P-merged-EncisCorrected.bed
+macs2 bdgpeakcall  --cutoff-analysis -i D-merged-EncisCorrected.bed   --outdir . --o-prefix D-merged-EncisCorrected.bed
+
+macs2 bdgpeakcall  -c 5  -i LZ-merged-EncisCorrected.bed  --outdir . --o-prefix LZ-merged-EncisCorrected.peak.bed
+macs2 bdgpeakcall  -c 5  -i P-merged-EncisCorrected.bed   --outdir . --o-prefix P-merged-EncisCorrected.peak.bed
+macs2 bdgpeakcall  -c 5  -i D-merged-EncisCorrected.bed   --outdir . --o-prefix D-merged-EncisCorrected.peak.bed
+
+rm LZ-merged-EncisCorrected.bed
+rm P-merged-EncisCorrected.bed
+rm D-merged-EncisCorrected.bed
+

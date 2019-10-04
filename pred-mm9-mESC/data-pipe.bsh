@@ -1,0 +1,29 @@
+#!/usr/bin/bash
+
+zcat /fs/cbsudanko/storage/data/mm9/esc/histones/mm8.GSM307618_ES.H3K4me3.densities.txt.gz | awk '{if ($3!=-1) print $1, $2, $2+24, $3}' - > mm8.GSM307618_ES.H3K4me3.bedgraph
+
+liftOver mm8.GSM307618_ES.H3K4me3.bedgraph  /fs/cbsudanko/storage/data/mm8/mm8ToMm9.over.chain.gz mm9.GSM307618_ES.H3K4me3.bedgraph mm9.GSM307618_ES.H3K4me3.unmap.bedgraph
+
+sort-bed mm9.GSM307618_ES.H3K4me3.bedgraph | awk  '{if ($4>0) print $0}' -  > mm9.GSM307618_ES.H3K4me3.sorted.bedgraph
+
+bedGraphToBigWig mm9.GSM307618_ES.H3K4me3.sorted.bedgraph /fs/cbsudanko/storage/data/mm9/mm9.chromInfo mm9.GSM307618_ES.H3K4me3.bw
+
+
+zcat /fs/cbsudanko/storage/data/mm9/esc/histones/mm8.GSM307619_ES.H3K27me3.densities.txt.gz | awk '{if ($3!=-1) print $1, $2, $2+24, $3}' - > mm8.GSM307619_ES.H3K27me3.bedgraph
+
+liftOver mm8.GSM307619_ES.H3K27me3.bedgraph  /fs/cbsudanko/storage/data/mm8/mm8ToMm9.over.chain.gz mm9.GSM307619_ES.H3K27me3.bedgraph mm9.GSM307619_ES.H3K27me3.unmap.bedgraph
+
+sort-bed mm9.GSM307619_ES.H3K27me3.bedgraph | awk  '{if ($4>0) print $0}' -  > mm9.GSM307619_ES.H3K27me3.sorted.bedgraph
+
+bedGraphToBigWig mm9.GSM307619_ES.H3K27me3.sorted.bedgraph /fs/cbsudanko/storage/data/mm9/mm9.chromInfo mm9.GSM307619_ES.H3K27me3.bw
+
+## Convert H3K4me3 data into integer encoding (rather than density)
+
+bigWigToBedGraph mm9.GSM307618_ES.H3K4me3.bw mm9.GSM307618_ES.H3K4me3.bg
+cat mm9.GSM307618_ES.H3K4me3.bg | awk 'BEGIN{OFS="\t"} {print $1,$2,$3,$4*4}' > mm9.GSM307618_ES.H3K4me3.int.bg
+bedGraphToBigWig mm9.GSM307618_ES.H3K4me3.int.bg /fs/cbsudanko/storage/data/mm9/mm9.chromInfo mm9.GSM307618_ES.H3K4me3.int.bw                               
+
+
+bedtools intersect -wa -a mm9.GSM307618_ES.H3K4me3.peak -b GSE48895-mm9.dREG.peak.score.bed.gz > mm9.GSM307618_ES.H3K4me3-dREG.peak
+bedtools intersect -wa -a mm9.GSM307619_ES.H3K27me3.peak -b GSE48895-mm9.dREG.peak.score.bed.gz > mm9.GSM307619_ES.H3K27me3-dREG.peak
+

@@ -1,0 +1,65 @@
+CD4_plus=/fs/cbsudanko/storage/data/hg19/cd4/proseq/CD4-U_plus.bw
+CD4_minus=/fs/cbsudanko/storage/data/hg19/cd4/proseq/CD4-U_minus.bw
+
+#Model=../models/H3k122ac.S1.V3.train.rdata
+#Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/GSM2054695_K562_H3K122ac.10bpres.bigWig
+#output=H3k122ac.S1.V3.CD4
+#R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+#mail -s 'X1' 'zw355@cornell.edu' < /dev/null
+
+
+#Model=../models/H3k27ac.S1.V3.train.rdata
+#Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k27acStdSig.bigWig
+#output=H3k27ac.S1.V3.CD4
+#R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+#mail -s 'X2' 'zw355@cornell.edu' < /dev/null
+
+#Model=../models/H4k20me1.S1.V3.train.rdata
+#Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H4k20me1StdSig.bigWig
+#output=H4k20me1.S1.V3.CD4
+#R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+#mail -s 'X10' 'zw355@cornell.edu' < /dev/null
+
+#Model=../models/H3k4me2.S1.V2.train.rdata
+#Histone=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k4me2StdSig.bigWig
+#output=H3k4me2.S1.V2.CD4
+#R --vanilla --slave --args  $Model $G1_plus $G1_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+#mail -s 'X6' 'zw355@cornell.edu' < /dev/null
+
+#========================================================================
+
+Model=../models/H3k27me3.S1.V3.train.rdata
+Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k27me3/h3k27me3.extend.bw
+output=H3k27me3.S1.V3.CD4
+R --vanilla --slave --args  $Model $CD4_plus $CD4_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+mail -s 'X3' 'zw355@cornell.edu' < /dev/null
+
+Model=../models/H3k36me3.S1.V3.train.rdata
+Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k36me3/h3k36me3.extend.bw
+output=H3k36me3.S1.V3.CD4
+R --vanilla --slave --args  $Model $CD4_plus $CD4_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+mail -s 'X4' 'zw355@cornell.edu' < /dev/null
+
+Model=../models/H3k4me1.S1.V2.train.rdata
+Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k4me1/h3k4me1.extend.bw
+output=H3k4me1.S1.V2.CD4
+R --vanilla --slave --args  $Model $CD4_plus $CD4_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+mail -s 'X5' 'zw355@cornell.edu' < /dev/null
+
+Model=../models/H3k4me3.S1.V3.train.rdata
+Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k4me3/h3k4me3.extend.bw
+output=H3k4me3.S1.V3.CD4
+R --vanilla --slave --args  $Model $CD4_plus $CD4_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+mail -s 'X7' 'zw355@cornell.edu' < /dev/null
+
+Model=../models/H3k9ac.S1.V2.train.rdata
+Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k9ac/h3k9ac.extend.bw
+output=H3k9ac.S1.V2.CD4
+R --vanilla --slave --args  $Model $CD4_plus $CD4_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+mail -s 'X8' 'zw355@cornell.edu' < /dev/null
+
+Model=../models/H3k9me3.S1.V2.train.rdata
+Histone=/fs/cbsudanko/storage/data/hg19/cd4/h3k9me3/h3k9me3.extend.bw
+output=H3k9me3.S1.V2.CD4
+R --vanilla --slave --args  $Model $CD4_plus $CD4_minus  $output   chr22  $Histone<  demo.hist.pred.chr.R >  $output.out
+mail -s 'X9' 'zw355@cornell.edu' < /dev/null

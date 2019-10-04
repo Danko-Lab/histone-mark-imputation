@@ -1,0 +1,71 @@
+file_k562_H3k122ac_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/GSM2054695_K562_H3K122ac.10bpres.bigWig
+file_k562_H3k27ac_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k27acStdSig.bigWig
+file_k562_H3k27me3_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k27me3StdSig.bigWig
+file_k562_H3k36me3_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k36me3StdSig.bigWig
+file_k562_H3k4me1_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k4me1StdSig.bigWig
+file_k562_H3k4me2_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k4me2StdSig.bigWig
+file_k562_H3k4me3_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k4me3StdSig.bigWig
+file_k562_H3k9ac_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k9acStdSig.bigWig
+file_k562_H3k9me3_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H3k9me3StdSig.bigWig
+file_k562_H4k20me1_bw=/fs/cbsudanko/storage/data/hg19/k562/histones/wgEncodeBroadHistoneK562H4k20me1StdSig.bigWig
+
+bigWigToBedGraph ${file_k562_H3k27ac_bw} beds/k562.H3k27ac.bed
+bigWigToBedGraph ${file_k562_H3k27me3_bw} beds/k562.H3k27me3.bed
+bigWigToBedGraph ${file_k562_H3k36me3_bw} beds/k562.H3k36me3.bed
+bigWigToBedGraph ${file_k562_H3k9me3_bw} beds/k562.H3k9me3.bed
+bigWigToBedGraph ${file_k562_H3k4me1_bw} beds/k562.H3k4me1.bed
+bigWigToBedGraph ${file_k562_H3k4me3_bw} beds/k562.H3k4me3.bed
+
+
+file_k562_H3k122ac_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H3k122ac.S1.V3.G1.bw
+file_k562_H3k27ac_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H3k27ac.S1.V3.G1.bw
+file_k562_H3k27me3_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H3k27me3.S1.V3.G1.bw
+file_k562_H3k36me3_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H3k36me3.S1.V3.G1.bw
+file_k562_H3k4me1_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H3k4me1.S1.V2.G1.bw
+file_k562_H3k4me2_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H3k4me2.S1.V2.G1.bw
+file_k562_H3k4me3_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H3k4me3.S1.V3.G1.bw
+file_k562_H3k9ac_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H3k9ac.S1.V2.G1.bw
+file_k562_H3k9me3_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H3k9me3.S1.V2.G1.bw
+file_k562_H4k20me1_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/raw.H4k20me1.S1.V3.G1.bw
+
+
+bigWigToBedGraph ${file_k562_H3k27ac_pred_raw} beds/raw.k562.H3k27ac.pred.bed
+bigWigToBedGraph ${file_k562_H3k27me3_pred_raw} beds/raw.k562.H3k27me3.pred.bed
+bigWigToBedGraph ${file_k562_H3k36me3_pred_raw} beds/raw.k562.H3k36me3.pred.bed
+bigWigToBedGraph ${file_k562_H3k9me3_pred_raw} beds/raw.k562.H3k9me3.pred.bed
+bigWigToBedGraph ${file_k562_H3k4me1_pred_raw} beds/raw.k562.H3k4me1.pred.bed
+bigWigToBedGraph ${file_k562_H3k4me3_pred_raw} beds/raw.k562.H3k4me3.pred.bed
+
+
+file_k562_H3k122ac_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H3k122ac.S1.V3.G1.bw
+file_k562_H3k27ac_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H3k27ac.S1.V3.G1.bw
+file_k562_H3k27me3_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H3k27me3.S1.V3.G1.bw
+file_k562_H3k36me3_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H3k36me3.S1.V3.G1.bw
+file_k562_H3k4me1_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H3k4me1.S1.V2.G1.bw
+file_k562_H3k4me2_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H3k4me2.S1.V2.G1.bw
+file_k562_H3k4me3_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H3k4me3.S1.V3.G1.bw
+file_k562_H3k9ac_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H3k9ac.S1.V2.G1.bw
+file_k562_H3k9me3_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H3k9me3.S1.V2.G1.bw
+file_k562_H4k20me1_pred_raw=/local/workdir/zw355/proj/prj15-histone/pred-k562/H4k20me1.S1.V3.G1.bw
+
+bigWigToBedGraph ${file_k562_H3k27ac_pred_raw} beds/k562.H3k27ac.pred.bed
+bigWigToBedGraph ${file_k562_H3k27me3_pred_raw} beds/k562.H3k27me3.pred.bed
+bigWigToBedGraph ${file_k562_H3k36me3_pred_raw} beds/k562.H3k36me3.pred.bed
+bigWigToBedGraph ${file_k562_H3k9me3_pred_raw} beds/k562.H3k9me3.pred.bed
+bigWigToBedGraph ${file_k562_H3k4me1_pred_raw} beds/k562.H3k4me1.pred.bed
+bigWigToBedGraph ${file_k562_H3k4me3_pred_raw} beds/k562.H3k4me3.pred.bed
+
+
+file_gm12878_H3k27ac_pred_raw=/fs/cbsudanko/storage/data/hg19/gm12878/histones/wgEncodeBroadHistoneGm12878H3k27acStdSig.bigWig
+file_gm12878_H3k27me3_pred_raw=/fs/cbsudanko/storage/data/hg19/gm12878/histones/wgEncodeBroadHistoneGm12878H3k27me3StdSig.bigWig
+file_gm12878_H3k36me3_pred_raw=/fs/cbsudanko/storage/data/hg19/gm12878/histones/wgEncodeBroadHistoneGm12878H3k36me3StdSig.bigWig
+file_gm12878_H3k4me1_pred_raw=/fs/cbsudanko/storage/data/hg19/gm12878/histones/wgEncodeBroadHistoneGm12878H3k4me1StdSig.bigWig
+file_gm12878_H3k4me3_pred_raw=/fs/cbsudanko/storage/data/hg19/gm12878/histones/wgEncodeBroadHistoneGm12878H3k4me3StdSig.bigWig
+file_gm12878_H3k9me3_pred_raw=/fs/cbsudanko/storage/data/hg19/gm12878/histones/wgEncodeBroadHistoneGm12878H3k9me3StdSig.bigWig
+
+bigWigToBedGraph ${file_gm12878_H3k27ac_pred_raw}  beds/gm12878.H3k27ac.bed
+bigWigToBedGraph ${file_gm12878_H3k27me3_pred_raw} beds/gm12878.H3k27me3.bed
+bigWigToBedGraph ${file_gm12878_H3k36me3_pred_raw} beds/gm12878.H3k36me3.bed
+bigWigToBedGraph ${file_gm12878_H3k9me3_pred_raw}  beds/gm12878.H3k9me3.bed
+bigWigToBedGraph ${file_gm12878_H3k4me1_pred_raw}  beds/gm12878.H3k4me1.bed
+bigWigToBedGraph ${file_gm12878_H3k4me3_pred_raw}  beds/gm12878.H3k4me3.bed

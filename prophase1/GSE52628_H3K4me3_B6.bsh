@@ -1,0 +1,26 @@
+## build by mm10
+bash /home/zw355/src/proseq2.0/mergeBigWigs.bsh --chrom-info=/fs/cbsudanko/storage/data/mm10/mm10.chromInfo   GSM3734414_ZY.H3K4me3.merge.bw GSM3734414_ZY.R1.H3K4me3.monoCorrected.ws25bp.bigwig   GSM3734417_ZY.R2.H3K4me3.monoCorrected.ws25bp.bigwig
+
+export PYTHONPATH=/programs/CrossMap-0.2.9/lib64/python2.7/site-packages:/programs/CrossMap-0.2.9/lib/python2.7/site-packages:$PYTHONPATH
+export PATH=/programs/CrossMap-0.2.9/bin:$PATH
+
+bigWigToBedGraph GSM3734414_ZY.H3K4me3.merge.bw GSM3734414_ZY.H3K4me3.merge.mm10.bedgraph
+CrossMap.py bed /fs/cbsudanko/storage/data/mm10/mm10ToMm9.over.chain.gz GSM3734414_ZY.H3K4me3.merge.mm10.bedgraph GSM3734414_ZY.H3K4me3.merge.mm9.bedgraph
+sort-bed GSM3734414_ZY.H3K4me3.merge.mm9.bedgraph > GSM3734414_ZY.H3K4me3.mm9.sorted.bedgraph
+R --no-save --args GSM3734414_ZY.H3K4me3.mm9.sorted.bedgraph  GSM3734414_ZY.H3K4me3.merge.mm9.unq.bedgraph < ../scripts/removeOverlap.R
+bigWigToBedGraph GSM3734414_ZY.H3K4me3.merge.mm9.unq.bedgraph /fs/cbsudanko/storage/data/mm9/mm9.chromInfo GSM3734414_ZY.H3K4me3.merge.mm9.bw
+
+source /programs/bin/util/setup_macs2.sh
+macs2 bdgpeakcall  --cutoff-analysis -i GSM3734414_ZY.H3K4me3.merge.mm9.unq.bedgraph  --outdir . --o-prefix GSM3734414_ZY.H3K4me3.merge.mm9
+macs2 bdgpeakcall  -c 40  -i GSM3734414_ZY.H3K4me3.merge.mm9.unq.bedgraph  --outdir . --o-prefix GSM3734414_ZY.H3K4me3.merge.mm9.peak.bed
+mv GSM3734414_ZY.H3K4me3.merge.mm9.peak.bed_c40.0_l200_g30_peaks.narrowPeak GSM3734414_ZY.H3K4me3.merge.mm9.peak.bed
+
+rm GSM3734414_ZY.H3K4me3.merge.mm9.unq.bedgraph
+rm GSM3734414_ZY.H3K4me3.merge.mm10.bedgraph
+rm GSM3734414_ZY.H3K4me3.mm9.sorted.bedgraph
+
+source /programs/bin/util/setup_macs2.sh
+bigWigToBedGraph GSM3734414_ZY.H3K4me3.merge.bw GSM3734414_ZY.H3K4me3.merge.bed
+macs2 bdgpeakcall  --cutoff-analysis -i GSM3734414_ZY.H3K4me3.merge.bed  --outdir . --o-prefix GSM3734414_ZY.H3K4me3.merge.mm10
+macs2 bdgpeakcall  -c 40  -i GSM3734414_ZY.H3K4me3.merge.bed  --outdir . --o-prefix GSM3734414_ZY.H3K4me3.merge.mm10.peak.bed
+
