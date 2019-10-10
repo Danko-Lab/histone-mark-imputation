@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+cat poised-plosgen.mm8.bed | awk 'BEGIN{OFS="\t"} {print $1,$2,$3,$6,$10,$4}' > bivalent.mm8.bed
+#python ~/bin/CrossMap/CrossMap-0.2.2/bin/CrossMap.py bed /local/storage/data/mm8/mm8ToMm9.over.chain.gz bivalent.mm8.bed bivalent.mm9.bed
+liftOver bivalent.mm8.bed /local/storage/data/mm8/mm8ToMm9.over.chain.gz bivalent.mm9.bed bivalent.mm9.bed.unmap
+
+
+

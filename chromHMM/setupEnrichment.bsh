@@ -1,0 +1,38 @@
+#!/usr/bin/bash
+
+pth=/local/ftp/pub/hub/histone/ChromHMM/
+chromInfo=/local/storage/data/hg19/hg19.chromInfo
+
+for x in {1..18}
+do
+ echo $x
+ zcat $pth/MS_K562_org_seg.bed.gz | awk 'BEGIN{OFS="\t"} ($4 == '"$x"'){print $0}' | sort-bed - > MS_K562_org_seg.state.$x.bed
+ bedtools genomecov -bg -i MS_K562_org_seg.state.$x.bed -g $chromInfo > MS_K562_org_seg.state.$x.bg
+ bedGraphToBigWig  MS_K562_org_seg.state.$x.bg $chromInfo MS_K562_org_seg.state.$x.bw 
+ 
+ bedtools shuffle -chrom -g $chromInfo -i MS_K562_org_seg.state.$x.bed | sort-bed - | bedtools genomecov -bg -i stdin -g $chromInfo > MS_K562_org_seg.state.$x.rand.bg
+ bedGraphToBigWig  MS_K562_org_seg.state.$x.rand.bg $chromInfo MS_K562_org_seg.state.$x.rand.bw
+ 
+ echo $x
+ zcat $pth/MS_K562_pred_seg.bed.gz | awk 'BEGIN{OFS="\t"} ($4 == '"$x"'){print $0}' | sort-bed - > MS_K562_pred_seg.state.$x.bed
+ bedtools genomecov -bg -i MS_K562_pred_seg.state.$x.bed -g $chromInfo > MS_K562_pred_seg.state.$x.bg
+ bedGraphToBigWig  MS_K562_pred_seg.state.$x.bg $chromInfo MS_K562_pred_seg.state.$x.bw 
+ 
+ bedtools shuffle -chrom -g $chromInfo -i MS_K562_pred_seg.state.$x.bed | sort-bed - | bedtools genomecov -bg -i stdin -g $chromInfo > MS_K562_pred_seg.state.$x.rand.bg
+ bedGraphToBigWig  MS_K562_pred_seg.state.$x.rand.bg $chromInfo MS_K562_pred_seg.state.$x.rand.bw
+done
+
+## Add the alternative dataset.
+
+for x in {1..18}
+do
+ echo $x
+ zcat $pth/MS_K562_UWother_seg.bed.gz | awk 'BEGIN{OFS="\t"} ($4 == '"$x"'){print $0}' | sort-bed - > MS_K562_UWother_seg.state.$x.bed
+ bedtools genomecov -bg -i MS_K562_UWother_seg.state.$x.bed -g $chromInfo > MS_K562_UWother_seg.state.$x.bg
+ bedGraphToBigWig  MS_K562_UWother_seg.state.$x.bg $chromInfo MS_K562_UWother_seg.state.$x.bw 
+ 
+ bedtools shuffle -chrom -g $chromInfo -i MS_K562_UWother_seg.state.$x.bed | sort-bed - | bedtools genomecov -bg -i stdin -g $chromInfo > MS_K562_UWother_seg.state.$x.rand.bg
+ bedGraphToBigWig  MS_K562_UWother_seg.state.$x.rand.bg $chromInfo MS_K562_UWother_seg.state.$x.rand.bw
+ 
+done
+
