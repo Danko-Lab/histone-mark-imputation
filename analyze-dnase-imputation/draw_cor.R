@@ -17,19 +17,18 @@ setwd("/workdir/cgd24/histoneImputation/")
 
 file.removed.reg <<- write.temp.bed(read.table(pipe(paste("cat ", file.temp.black, file.temp.unmap , " | sort-bed - | bedtools merge -i - "))));
 
-if(0)
+if(1)
 {
-
-  draw_cor_signal( "dNase.K562.1k",    file.dnase.bw,     file.dNase.pred.bw,  NULL, chr="chr22", range=1000, xlim=c(0,50), ylim=c(0,50) );
-  draw_cor_signal( "dNase.K562.100",    file.dnase.bw,     file.dNase.pred.bw,  NULL, chr="chr22", range=100, xlim=c(0,10), ylim=c(0,10) );
-  draw_cor_signal( "dNase.K562.peaks.1k", file.dnase.bw,     file.dNase.pred.bw,  NULL, chr="chr22", range=1000, xlim=c(0,50), ylim=c(0,50), file.peaks=file.dnase.peakcalling );
-  draw_cor_signal( "dNase.K562.peaks.100", file.dnase.bw,     file.dNase.pred.bw,  NULL, chr="chr22", range=100, xlim=c(0,10), ylim=c(0,10), file.peaks=file.dnase.peakcalling );  
-  draw_cor_signal( "raw.dNase.K562.peaks.CTCF.1k",    file.dnase.bw,     file.dNase.pred.raw,  NULL, chr="chr22", range=1000, xlim=c(0,50), ylim=c(0,50), file.peaks=file.K562.CTCF.bed );
-  draw_cor_signal( "raw.dNase.K562.peaks.CTCF.100",    file.dnase.bw,     file.dNase.pred.raw,  NULL, chr="chr22", range=100, xlim=c(0,10), ylim=c(0,10), file.peaks=file.K562.CTCF.bed );
+  draw_cor_signal( "dNase.K562.1k",    file.dnase.bw,     file.dNase.pred.bw,  NULL, chr="chr22", range=1000, xlim=c(0,50), ylim=c(0,50), out.bed.file= "dnase.K562.1k-data.bed");
+  draw_cor_signal( "dNase.K562.100",    file.dnase.bw,     file.dNase.pred.bw,  NULL, chr="chr22", range=100, xlim=c(0,10), ylim=c(0,10), out.bed.file= "dnase.K562.100-data.bed");
+  draw_cor_signal( "dNase.K562.peaks.1k", file.dnase.bw,     file.dNase.pred.bw,  NULL, chr="chr22", range=1000, xlim=c(0,50), ylim=c(0,50), file.peaks=file.dnase.peakcalling, out.bed.file= "dnase.K562.peaks.1k-data.bed");
+  draw_cor_signal( "dNase.K562.peaks.100", file.dnase.bw,     file.dNase.pred.bw,  NULL, chr="chr22", range=100, xlim=c(0,10), ylim=c(0,10), file.peaks=file.dnase.peakcalling, out.bed.file= "dnase.K562.peaks.100-data.bed" );  
+  draw_cor_signal( "raw.dNase.K562.peaks.CTCF.1k",    file.dnase.bw,     file.dNase.pred.raw,  NULL, chr="chr22", range=1000, xlim=c(0,50), ylim=c(0,50), file.peaks=file.K562.CTCF.bed, out.bed.file= "dnase.K562.peaks.CTCF.1k-data.bed" );
+  draw_cor_signal( "raw.dNase.K562.peaks.CTCF.100",    file.dnase.bw,     file.dNase.pred.raw,  NULL, chr="chr22", range=100, xlim=c(0,10), ylim=c(0,10), file.peaks=file.K562.CTCF.bed, out.bed.file= "dnase.K562.peaks.CTCF.100-data.bed"  );
 }
 
 ## Conservative peaks for TFs.
-if(1)
+if(0)
 {
   peakpath <- "~/cbsudanko/projects/TFBindingSVR/dTOX/k562/chipseq_peak/"
   narrowPeaks <- dir(peakpath, pattern="conserv.bed.gz")

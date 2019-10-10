@@ -180,13 +180,14 @@ densScatterplot <- function(x1, x2, uselog=FALSE, n=256, cex=2, ...) {
 }
 
 
-draw_cor_signal <- function( out.prefix, file.org.bw, file.pred.bw, file.ctrl.bw=NULL, chr=NULL, ref.gene.bed=NULL, scatter.log=NULL, range=20000, xlab="Histone", ylab="Predict" , xlim=c(0,50000), ylim=c(0, 50000), file.peaks=NULL, peak.mode=0, peak.ext=100)
+draw_cor_signal <- function( out.prefix, file.org.bw, file.pred.bw, file.ctrl.bw=NULL, chr=NULL, ref.gene.bed=NULL, scatter.log=NULL, range=20000, xlab="Histone", ylab="Predict" , xlim=c(0,50000), ylim=c(0, 50000), file.peaks=NULL, peak.mode=0, peak.ext=100, out.bed.file=NULL)
 {
 	cat("source 1 file=", out.prefix, "\n");
 	cat("source 2 file (file.org.bw)=", file.org.bw, "\n");
 	cat("source 3 file (file.pred.bw)=", file.pred.bw, "\n");
 	cat("source 4 file (file.ctrl.bw)=", file.ctrl.bw, "\n");
 	cat("source 5 file (file.peaks)=", file.peaks, "\n");
+	cat("writing data to=", out.bed.file, "\n");
 
     if (is.na(file.org.bw) || is.na(file.pred.bw))
        return(NA);
@@ -283,6 +284,7 @@ cat("regions 2=", NROW(tb.s1), "\n")
            #show( bigtb1[idx.rem,]);
            y.range.org <- bigtb1$org[-idx.rem];
            y.range.pred <- bigtb1$pred[-idx.rem];
+           tb.s1 <- tb.s1[-idx.rem,]
         }
         else
         {
@@ -325,8 +327,14 @@ cat("q(pred, 0.25)", quantile(y.range.pred, 0.25), "\n")
 #		densScatterplot( y.range.org, y.range.pred, uselog=FALSE, cex=1.5, cex.axis=2, cex.lab=2, main=paste(out.prefix, "(", str.cor, ")"), xlab=paste0("log(", xlab, ")"), ylab=paste0("log(", ylab, ")"))#, xlim=c(0.01, log(max(xlim), 10)), ylim=c(0.01, log(max(ylim),10)));
 #		dev.off();
 	}
-	
-	
+
+  if(!is.null(out.bed.file)) {
+    ## Generate a data.frame with the coordinates, experimental, and predicted values used for the analysis.
+    dataBedToWrite <- cbind(tb.s1, experiment= y.range.org, imputed= y.range.pred);
+    write.table(dataBedToWrite, file=out.bed.file, quote=F, row.names=F, col.names=F, sep="\t");
+
+  }
+		
 	return(data.frame(plot=out.prefix, rem.count=NROW(idx.rem), pearson=r.cor1, spearman=r.cor2, mad=r.mad, JSD=r.JSD))
 	
 }
