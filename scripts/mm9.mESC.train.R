@@ -14,8 +14,10 @@ file.mm9.mESC.proseq.plus  <- "/fs/cbsudanko/storage/data/mm9/esc/groseq/GSE4889
 file.mm9.mESC.H3k4me3  <- "../pred-mm9-mESC/mm9.GSM307618_ES.H3K4me3.int.bw"
 file.mm9.mESC.H3k27me3 <- "../pred-mm9-mESC/mm9.GSM307619_ES.H3K27me3.bw"
 
-file.mm9.mESC.H3k4me3.peak  <- "../pred-mm9-mESC/mm9.GSM307618_ES.H3K4me3-dREG.peak"
-file.mm9.mESC.H3k27me3.peak <- "../pred-mm9-mESC/mm9.GSM307619_ES.H3K27me3-dREG.peak"
+file.mm9.mESC.dreg <- "../pred-mm9-mESC/GSE48895-mm9.dREG.peak.score.bed.gz"
+
+file.mm9.mESC.H3k4me3.peak  <- "../pred-mm9-mESC/mm9.GSM307618_ES.H3K4me3.peak"
+file.mm9.mESC.H3k27me3.peak <- "../pred-mm9-mESC/mm9.GSM307619_ES.H3K27me3.peak"
 
 file.H3k4me3.model  <- "../models/mESC.H3k4me3.S1.train.rdata";
 file.H3k27me3.model <- "../models/mESC.H3k27me3.S1.train.rdata";
@@ -31,19 +33,22 @@ if(1)
 {
 if(!file.exists(file.H3k4me3.model))
 {
-  tb <- read.table(file.mm9.mESC.H3k4me3.peak);
-  tb[,2] <- tb[,2] #- 10000
-  tb[,3] <- tb[,3] #+ 10000
+  tb <- rbind(read.table(file.mm9.mESC.dreg)[,c(1:3)], read.table(file.mm9.mESC.H3k4me3.peak)[,c(1:3)]);
+  print(head(tb));
   file.tmp.pos.bed <- write.temp.bed(tb, compress=FALSE);
+  print(file.tmp.pos.bed)
 
   tb <- read.table(pipe(paste("bedtools complement -i ",  file.tmp.pos.bed, " -g /fs/cbsudanko/storage/data/mm9/mm9.chromInfo.sorted | sort-bed -")));
+  print(head(tb))
   file.tmp.neg.bed <- write.temp.bed(tb, compress=FALSE);
+  print(head(tb))
+  print(file.tmp.neg.bed)
 
   model <- create_train_model( path.proseq, file.mm9.mESC.proseq.plus, file.mm9.mESC.proseq.minus, 
-                file.tmp.neg.bed, file.mm9.mESC.H3k4me3.peak, 
+                file.tmp.neg.bed, file.mm9.mESC.dreg, 
                 path.histone, file.mm9.mESC.H3k4me3, 
                 file.mm9.mESC.H3k4me3.peak, ratio = 0.1, 
-                samples=400000*5, strategy=1, 
+                samples=400000, strategy=2, 
                 exclude=c("chr1", "chr2", "chrX", "chrY", "chrM"))
   model <- build_train_model( model )
   model <- svm_train_model(model, gdm, file.H3k4me3.model, ncores=8);
@@ -72,19 +77,18 @@ pred2 <- svm_predict_chr_parallel( "mESC.H3k4me3.trainbyself.S1",
 if(1) {
 if(!file.exists(file.H3k27me3.model))
 {
-  tb <- read.table(file.mm9.mESC.H3k27me3.peak);
-  tb[,2] <- tb[,2] #- 10000
-  tb[,3] <- tb[,3] #+ 10000
+  tb <- rbind(read.table(file.mm9.mESC.dreg)[,c(1:3)], read.table(file.mm9.mESC.H3k27me3.peak)[,c(1:3)]);
+  print(head(tb));
   file.tmp.pos.bed <- write.temp.bed(tb, compress=FALSE);
 
   tb <- read.table(pipe(paste("bedtools complement -i ",  file.tmp.pos.bed, " -g /fs/cbsudanko/storage/data/mm9/mm9.chromInfo.sorted | sort-bed -")));
   file.tmp.neg.bed <- write.temp.bed(tb, compress=FALSE);
 
   model <- create_train_model( path.proseq, file.mm9.mESC.proseq.plus, file.mm9.mESC.proseq.minus, 
-                file.tmp.neg.bed, file.mm9.mESC.H3k27me3.peak, 
+                file.tmp.neg.bed, file.mm9.mESC.dreg, 
                 path.histone, file.mm9.mESC.H3k27me3, 
                 file.mm9.mESC.H3k27me3.peak, ratio = 0.1, 
-                samples=400000*5, strategy=1, 
+                samples=400000, strategy=2, 
                 exclude=c("chr1", "chr2", "chrX", "chrY", "chrM"))
   model <- build_train_model( model )
   model <- svm_train_model(model, gdm, file.H3k27me3.model, ncores=8);

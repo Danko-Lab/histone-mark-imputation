@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+cd /workdir/zw355/proj/prj15-histone/h2h-model
+for i in *chr22*.bed.gz
+ do
+  echo $i
+  zcat $i | awk 'BEGIN{OFS="\t"} {print $1,$2,$3,$4}' > /workdir/cgd24/histoneImputation/tmp.bedGraph
+  bedGraphToBigWig /workdir/cgd24/histoneImputation/tmp.bedGraph ~/cbsudanko/data/hg19/hg19.chromInfo /workdir/cgd24/histoneImputation/bw/$i.bw
+ done
+cd /workdir/cgd24/histoneImputation/bw/
+  
+ 
