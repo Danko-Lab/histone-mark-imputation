@@ -1,12 +1,12 @@
 #/programs/R-3.4.2/bin/R
-source("draw-base.R");
+source("/workdir/zw355/proj/prj15-histone/analyze-dnase-imputation/draw-base.R");
 
 g_noplot <<- FALSE;
 
 setwd("/workdir/zw355/proj/prj15-histone/figures");
 
-file.temp.black  <- write.temp.bed(read.table(file.blacklist)[,c(1:3)], compress=FALSE )
-tb.unmap.bed <- read.table(file.unmap.bed)[,c(1:3)];
+file.temp.black  <- write.temp.bed(read.table(file.hg19.black.bed)[,c(1:3)], compress=FALSE )
+tb.unmap.bed <- read.table(file.hg19.unmap.bed)[,c(1:3)];
 tb.unmap.bed <- tb.unmap.bed[ tb.unmap.bed[,3] - tb.unmap.bed[,2]>100,,drop=F ]
 file.temp.unmap  <- write.temp.bed(tb.unmap.bed, compress=FALSE )
 rm(tb.unmap.bed);

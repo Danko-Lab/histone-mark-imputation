@@ -284,7 +284,6 @@ cat("regions 2=", NROW(tb.s1), "\n")
            #show( bigtb1[idx.rem,]);
            y.range.org <- bigtb1$org[-idx.rem];
            y.range.pred <- bigtb1$pred[-idx.rem];
-           tb.s1 <- tb.s1[-idx.rem,]
         }
         else
         {
@@ -330,8 +329,10 @@ cat("q(pred, 0.25)", quantile(y.range.pred, 0.25), "\n")
 
   if(!is.null(out.bed.file)) {
     ## Generate a data.frame with the coordinates, experimental, and predicted values used for the analysis.
-    dataBedToWrite <- cbind(tb.s1, experiment= y.range.org, imputed= y.range.pred);
-    write.table(dataBedToWrite, file=out.bed.file, quote=F, row.names=F, col.names=F, sep="\t");
+    print(paste("Writing out BED file.", NROW(tb.s1), NROW(y.range.org), NROW(y.range.pred), NROW(bigtb1)))
+    print(head(bigtb1))
+    #dataBedToWrite <- cbind(tb.s1, experiment= y.range.org, imputed= y.range.pred);
+    write.table(bigtb1, file=out.bed.file, quote=F, row.names=F, col.names=F, sep="\t");
 
   }
 		
