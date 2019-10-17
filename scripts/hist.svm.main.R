@@ -441,7 +441,9 @@ select_train_sample_S2<-function( model, index )
     r1 <- 0.1; r2 <- 0.05; r3 <- 0.05; r4 <- 0.78; r5<- 0.02;
     fmat0 <- fmat1 <- c();
 
+    print(paste("Loading negative positions:", model$src$file.rdata.negative))
     load( model$src$file.rdata.negative );
+    print(paste("Loading positive positions:", model$src$file.rdata.positive))
     load( model$src$file.rdata.positive );
     infp  <- model$infp[[index]];
 

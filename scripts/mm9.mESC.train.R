@@ -54,7 +54,7 @@ if(!file.exists(file.H3k4me3.model))
   model <- svm_train_model(model, gdm, file.H3k4me3.model, ncores=8);
   save(model, file = file.H3k4me3.model);
 }
- 
+if(0){ 
 pred1 <- svm_predict_chr_parallel( "mESC.H3k4me3.trainbyself.S1", 
                 file.mm9.mESC.proseq.plus, 
                 file.mm9.mESC.proseq.minus, 
@@ -71,10 +71,10 @@ pred2 <- svm_predict_chr_parallel( "mESC.H3k4me3.trainbyself.S1",
                 bigwig_compare=file.mm9.mESC.H3k4me3, 
                 ncores=5, linear_scale=F, gpu.idx=0  );
                 
-}
+}}
 
 #training H3k27me3 Model
-if(1) {
+if(0) {
 if(!file.exists(file.H3k27me3.model))
 {
   tb <- rbind(read.table(file.mm9.mESC.dreg)[,c(1:3)], read.table(file.mm9.mESC.H3k27me3.peak)[,c(1:3)]);
