@@ -1,18 +1,23 @@
 require(bigWig)
 
-metaPlot <- function(bed, HP_FILE, path="./", stp= 100, halfWindow= 10000, ...) {
+metaPlot <- function(bed, HP_FILE, path="./", stp= 100, halfWindow= 10000, writeMetaProfile= FALSE, ...) {
 	bed <- center.bed(bed, halfWindow, halfWindow)
 	HP <- load.bigWig(paste(path, HP_FILE, sep=""))
 	H_meta <- metaprofile.bigWig(bed, HP, step=stp)
 
         N = length(H_meta$middle)
         x = 1:N*stp 
+	signal = HP$mean*HP$basesCovered
 	
+	if(writeMetaProfile) {
 	plot.metaprofile(H_meta, X0= 0, ...)
 	abline(v=halfWindow, lty="dotted")
+	}
+
+	return(list(data = H_meta, signal= signal))
 }
 
-metaPlot_str <- function(bed, HP, HM, path="./", stp= 100, halfWindow= 10000, ...) {
+metaPlot_str <- function(bed, HP, HM, path="./", stp= 100, halfWindow= 10000, writeMetaProfile= FALSE, ...) {
         bed <- center.bed(bed, halfWindow, halfWindow)
 
         HP <- load.bigWig(paste(path, HP, sep=""))
@@ -23,9 +28,23 @@ metaPlot_str <- function(bed, HP, HM, path="./", stp= 100, halfWindow= 10000, ..
 
         N = length(H_meta_p$middle)
         x = 1:N*stp ## ((1:N) - N/2)* stp
+        signal = HP$mean*HP$basesCovered + abs(HM$mean*HM$basesCovered)
 
+	if(writeMetaProfile) {
         plot.metaprofile(H_meta_p, minus.profile=H_meta_m, X0= 0, ...)
         abline(v=halfWindow, lty="dotted")
+	}
+
+        return(list(plus= H_meta_p, minus= H_meta_m, signal= signal))
+}
+
+add_data <- function(meta, col_plus= "black") {
+        lines(y= meta$data$middle/meta$signal / stp, x= seq(-(hW-stp/2), hW, stp), col=col_plus)
+}
+
+add_data_str <- function(meta, col_plus= "red", col_minus= "blue") {
+        lines(y= meta$plus$middle/meta$signal / stp, x= seq(-(hW-stp/2), hW, stp), col=col_plus)
+        lines(y= -1 * meta$minus$middle/meta$signal / stp, x= seq(-(hW-stp/2), hW, stp), col=col_minus)
 }
 
 if(0) { ## Examples below. if(0) designed to present this from runnig. 
