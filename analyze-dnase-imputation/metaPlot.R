@@ -7,7 +7,7 @@ metaPlot <- function(bed, HP_FILE, path="./", stp= 100, halfWindow= 10000, write
 
         N = length(H_meta$middle)
         x = 1:N*stp 
-	signal = HP$mean*HP$basesCovered
+	signal = HP$mean*HP$basesCovered / 1e6
 	
 	if(writeMetaProfile) {
 	plot.metaprofile(H_meta, X0= 0, ...)
@@ -28,7 +28,7 @@ metaPlot_str <- function(bed, HP, HM, path="./", stp= 100, halfWindow= 10000, wr
 
         N = length(H_meta_p$middle)
         x = 1:N*stp ## ((1:N) - N/2)* stp
-        signal = HP$mean*HP$basesCovered + abs(HM$mean*HM$basesCovered)
+        signal = HP$mean*HP$basesCovered + abs(HM$mean*HM$basesCovered) / 1e6
 
 	if(writeMetaProfile) {
         plot.metaprofile(H_meta_p, minus.profile=H_meta_m, X0= 0, ...)
@@ -38,13 +38,29 @@ metaPlot_str <- function(bed, HP, HM, path="./", stp= 100, halfWindow= 10000, wr
         return(list(plus= H_meta_p, minus= H_meta_m, signal= signal))
 }
 
-add_data <- function(meta, col_plus= "black") {
-        lines(y= meta$data$middle/meta$signal / stp, x= seq(-(hW-stp/2), hW, stp), col=col_plus)
+add_data <- function(meta, col_plus= "black", ...) {
+        lines(y= meta$data$middle/meta$signal / stp, x= seq(-(hW-stp/2), hW, stp), col=col_plus, ...)
 }
 
-add_data_str <- function(meta, col_plus= "red", col_minus= "blue") {
-        lines(y= meta$plus$middle/meta$signal / stp, x= seq(-(hW-stp/2), hW, stp), col=col_plus)
-        lines(y= -1 * meta$minus$middle/meta$signal / stp, x= seq(-(hW-stp/2), hW, stp), col=col_minus)
+add_data_str <- function(meta, col_plus= "red", col_minus= "blue", ...) {
+        lines(y= meta$plus$middle/meta$signal / stp, x= seq(-(hW-stp/2), hW, stp), col=col_plus, ...)
+        lines(y= -1 * meta$minus$middle/meta$signal / stp, x= seq(-(hW-stp/2), hW, stp), col=col_minus, ...)
+}
+
+get_ylims <- function(meta_list) {
+	mv <- -10000
+	for(i in 1:NROW(meta_list)) {
+		mv <- max(c(mv, meta_list[[i]]$data$middle/meta_list[[i]]$signal / stp))
+	}
+	return(mv)
+}
+
+get_ylims_str <- function(meta_list) {
+        mv <- -10000
+        for(i in 1:NROW(meta_list)) {
+                mv <- max(c(mv, meta_list[[i]]$plus$middle/meta_list[[i]]$signal / stp, meta_list[[i]]$minus$middle/meta_list[[i]]$signal / stp))
+        }
+        return(mv)
 }
 
 if(0) { ## Examples below. if(0) designed to present this from runnig. 

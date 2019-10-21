@@ -10,13 +10,27 @@ data_pth = "/fs/cbsudanko/storage/data/hg19/k562/"
 ## Graphing parameters
 step_size = 25
 halfWindow_size = 2000
-th = 0.25
+th = 0.25 
+
+## Graphical paremeters
+lw = 2 ## LWD in plots.
 
 ## Get BED coordinates for regions.
 ## Columns represent: 
 ##    chr, start, stop, tbs0.idx, org, pred, ratio
 bf_ctcf <- read.table("dnase.K562.peaks.CTCF.100-data.bed.gz")
 colnames(bf_ctcf) <- c("chr", "start", "stop", "tbs0.idx", "org", "pred", "ratio")
+
+bf_peaks <- read.table("dnase.K562.peaks.100-data.bed.gz")
+colnames(bf_peaks) <- c("chr", "start", "stop", "tbs0.idx", "org", "pred", "ratio")
+
+## Santiy check the threshold
+if(0) {
+plot(bf_ctcf$org, bf_ctcf_pred)
+abline(h=th, col="red")
+abline(v=th, col="red")
+}
+## Looks resonable!
 
 ####################################################
 ##
@@ -33,11 +47,24 @@ file.tmp.bed <- write.temp.bed(bf_ctcf[indx,], compress=FALSE)
 lr <- read.table(pipe(paste("bedtools merge -d 1 -i ",  file.tmp.bed)))#, " | sort-bed -")))
 
 
+## Now for peaks...
+
+## Upper right
+indx <- bf_peaks$pred > th & bf_peaks$org > th
+file.tmp.bed <- write.temp.bed(bf_peaks[indx,], compress=FALSE)
+urp <- read.table(pipe(paste("bedtools merge -d 1 -i ",  file.tmp.bed)))#, " | sort-bed -")))
+
+## Lower right
+indx <- bf_peaks$pred < th & bf_peaks$org > th
+file.tmp.bed <- write.temp.bed(bf_peaks[indx,], compress=FALSE)
+lrp <- read.table(pipe(paste("bedtools merge -d 1 -i ",  file.tmp.bed)))#, " | sort-bed -")))
+
+
 ####################################################
 ##
 ## Generate meta plots for GRO-cap and PRO-seq.
 
-analyzeData <- function( hd1, main_title ) {
+analyzeData <- function( hd1, main_title, hW= halfWindow_size, ylims= NULL ) {
 
   ## Generate meta plots for run-on assays.
   pth = paste(data_pth, "groseq_tss/", sep="")
@@ -59,28 +86,53 @@ analyzeData <- function( hd1, main_title ) {
   pth = paste(data_pth, "dnase/", sep="")
   dnase = metaPlot(hd1, "wgEncodeOpenChromDnaseK562SigV2.bigWig", main="DNase", path=pth, stp=step_size, halfWindow=halfWindow_size) 
 
+  ## Now get the ylims if need be...
+  if(is.null(ylims)) {
+   ylims <- list( c(0,get_ylims_str(list(GC, GC_noTap, PS))), 
+                  c(0,get_ylims(list(h3k27ac,h3k27me3,h3k4me3,h3k4me1))),
+                  c(0,get_ylims(list(ctcf))),
+                  c(0,get_ylims(list(dnase))) )
+  }
+
   ## Draw meta plots for each of these groups...
-  pdf(paste(mainTitle, "_MetaPlots.pdf", sep=""))
-  add_data_str(GC, "#cb6751", "#cb6751")
-  add_data_str(GC_noTap, "#cb6751", "#cb6751")
-  add_data_str(PS, "#cb6751", "#cb6751")
+#  pdf(paste(mainTitle, "_MetaPlots.pdf", sep=""))
 
-  plot(-100000, -1000000, xlim= c(-hW, hW), ylim=ylims, xlab="Distance to TSS", ylab="Signal [Normalized counts]")
-  add_data(dnase, "#cb6751", "#cb6751")
-  
-  plot(-100000, -1000000, xlim= c(-hW, hW), ylim=ylims, xlab="Distance to TSS", ylab="Signal [Normalized counts]")
-  add_data(h3k27ac, "#cb6751", "#cb6751")
-  add_data(h3k27me3, "#9e6ebd", "#9e6ebd")
-  add_data(h3k4me3, "#7aa457", "#7aa457")
-  add_data(h3k4me1, "#7aa457", "#7aa457")
- 
-  plot(-100000, -1000000, xlim= c(-hW, hW), ylim=ylims, xlab="Distance to TSS", ylab="Signal [Normalized counts]")
-  add_data(ctcf, "#cb6751", "#cb6751")
- 
-  dev.off()
+  plot(-100000, -1000000, xlim= c(-hW, hW), ylim=ylims[[1]], xlab="Distance to TSS", ylab="Signal [Normalized counts]", main = "Pol II")
+  add_data_str(GC, "#ff6751", "#ff6751", lwd=lw)
+  add_data_str(GC_noTap, "#006751", "#006751", lwd=lw)
+  add_data_str(PS, "#000000", "#000000", lwd=lw)
 
+  plot(-100000, -1000000, xlim= c(-hW, hW), ylim=ylims[[2]], xlab="Distance to TSS", ylab="Signal [Normalized counts]", main = "Histone mods")
+  add_data(h3k27ac, "#00aa00", lwd=lw)
+  add_data(h3k27me3, "#00119e", lwd=lw)
+  add_data(h3k4me3, "#7a0000", lwd=lw)
+  add_data(h3k4me1, "#7a9999", lwd=lw)
+
+  plot(-100000, -1000000, xlim= c(-hW, hW), ylim=ylims[[3]], xlab="Distance to TSS", ylab="Signal [Normalized counts]", main = "CTCF")
+  add_data(ctcf, "#000000", lwd=lw)
+
+  plot(-100000, -1000000, xlim= c(-hW, hW), ylim=ylims[[4]], xlab="Distance to TSS", ylab="Signal [Normalized counts]", main = "DNase-I")
+  add_data(dnase, "#000000", lwd=lw)
+
+#  dev.off()
+
+  return(ylims)
 }
 
-analyzeData(ur, "UpperRight-CTCF")
-analyzeData(lr, "LowerRight-CTCF")
+pdf("CTCF_Sites.pdf")
+
+par(mfrow = c(2,4))
+yl <- analyzeData(ur, "UpperRight-CTCF")
+yl <- analyzeData(lr, "LowerRight-CTCF", ylims= yl)
+
+dev.off()
+
+pdf("DNase_Peaks.pdf")
+
+par(mfrow = c(2,4))
+yl <- analyzeData(urp, "UpperRight-CTCF")
+yl <- analyzeData(lrp, "LowerRight-CTCF", ylims= yl)
+
+dev.off()
+
 
