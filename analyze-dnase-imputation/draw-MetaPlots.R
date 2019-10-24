@@ -8,8 +8,8 @@ source("metaPlot.R")
 data_pth = "/fs/cbsudanko/storage/data/hg19/k562/"
 
 ## Graphing parameters
-step_size = 25
-halfWindow_size = 2000
+stp = step_size = 25
+hW = halfWindow_size = 2000
 th = 0.25 
 
 ## Graphical paremeters
@@ -23,6 +23,9 @@ colnames(bf_ctcf) <- c("chr", "start", "stop", "tbs0.idx", "org", "pred", "ratio
 
 bf_peaks <- read.table("dnase.K562.peaks.100-data.bed.gz")
 colnames(bf_peaks) <- c("chr", "start", "stop", "tbs0.idx", "org", "pred", "ratio")
+
+bf_k27ac <- read.table("dnase.K562.peaks.K27ac.100-data.bed.gz")
+colnames(bf_k27ac) <- c("chr", "start", "stop", "tbs0.idx", "org", "pred", "ratio")
 
 ## Santiy check the threshold
 if(0) {
@@ -46,6 +49,10 @@ indx <- bf_ctcf$pred < th & bf_ctcf$org > th
 file.tmp.bed <- write.temp.bed(bf_ctcf[indx,], compress=FALSE)
 lr <- read.table(pipe(paste("bedtools merge -d 1 -i ",  file.tmp.bed)))#, " | sort-bed -")))
 
+## K27ac
+indx <- bf_k27ac$pred > th & bf_k27ac$org > th
+file.tmp.bed <- write.temp.bed(bf_k27ac[indx,], compress=FALSE)
+urk <- read.table(pipe(paste("bedtools merge -d 1 -i ",  file.tmp.bed)))#, " | sort-bed -")))
 
 ## Now for peaks...
 
@@ -121,9 +128,10 @@ analyzeData <- function( hd1, main_title, hW= halfWindow_size, ylims= NULL ) {
 
 pdf("CTCF_Sites.pdf")
 
-par(mfrow = c(2,4))
+par(mfrow = c(3,4))
 yl <- analyzeData(ur, "UpperRight-CTCF")
 yl <- analyzeData(lr, "LowerRight-CTCF", ylims= yl)
+yl <- analyzeData(urk, "UpperRight-K27ac", ylims= yl)
 
 dev.off()
 
