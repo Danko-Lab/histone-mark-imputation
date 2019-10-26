@@ -126,12 +126,15 @@ analyzeData <- function( hd1, main_title, hW= halfWindow_size, ylims= NULL ) {
   return(ylims)
 }
 
-pdf("CTCF_Sites.pdf")
+#pdf("CTCF_Sites.pdf", width=11, height=9)
+pdf("CTCF_Sites_sm.pdf", width=8, height=6)
+
+yl <- list(c(0.00000000000, 0.00000007048), c(0.00000, 0.015), c(0, 0.04), c(0.000000, 0.007679))
 
 par(mfrow = c(3,4))
-yl <- analyzeData(ur, "UpperRight-CTCF")
-yl <- analyzeData(lr, "LowerRight-CTCF", ylims= yl)
 yl <- analyzeData(urk, "UpperRight-K27ac", ylims= yl)
+yl <- analyzeData(ur, "UpperRight-CTCF", ylims= yl)
+yl <- analyzeData(lr, "LowerRight-CTCF", ylims= yl)
 
 dev.off()
 
