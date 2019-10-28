@@ -91,12 +91,15 @@ draw_scatter_subplot<-function(fig.rdata, log=TRUE)
     }
     else
     {
-        dens_scatter_plot2 ( y.win.exp, y.win.pred, uselog=TRUE, 
-                            cex=1.5, cex.axis=2, cex.lab=2, 
-                            main="", xlab="", ylab="", xaxt="n", yaxt="n" );
+	indx <- y.win.exp > 0 & y.win.pred > 0
+        #xylims <- c(min(y.win.exp[y.win.exp > 0]), max(c(y.win.exp,y.win.pred)));
+        dens_scatter_plot2 ( y.win.exp[indx], y.win.pred[indx], uselog=TRUE, 
+                            cex=3, cex.axis=2, cex.lab=2, 
+                            main="", xlab="", ylab="", xaxt="n", yaxt="n");#, xlim=xylims, ylim=xylims);
     }
 }
 
+## For GM12878
 if(0)
 {
     bLog <- TRUE;
@@ -109,8 +112,9 @@ if(0)
     lay.heights <- c( rep(1,9), 0.5);
     lay.widths  <- c( 0.5, rep(1,3) )
     layout(matrix(c(1:40), ncol=4, byrow=F), widths=lay.widths, heights=lay.heights)
+    mark_order <- c(7,6,5,1,4,3,9,2,8) # 1:NROW(df.GM.info) ## Reorder marks. 
 
-    for(i in 1:NROW(df.GM.info) ) 
+    for(i in mark_order)#1:NROW(df.GM.info) ) 
     {
 	par(mar=c(0,0,0,0), plt=c(0.2, 0.8,0.2, 0.8 ));
 	plot(1, type="n", xaxt = 'n', yaxt = 'n', bty = 'n', xlab="", ylab="", xlim=c(0, 10), ylim=c(0, 10))
@@ -121,7 +125,7 @@ if(0)
 
     for(zoom_rate in c(0.1, 1, 10))
     {
-	for(i in 1:NROW(df.GM.info))
+	for(i in mark_order)#1:NROW(df.GM.info))
        {
 	   fig.rdata <- paste( df.GM.info[i,"Cell"], df.GM.info[i,"Mark"], df.GM.info[i,"Ver"], "chr22", paste0("w", zoom_rate , "k"), "png.rdata",sep=".")
 	   draw_scatter_subplot(fig.rdata, bLog);
@@ -132,7 +136,7 @@ if(0)
     dev.off();
 }
 
-if(1)
+if(0)
 {
     bLog <- TRUE;
     if(bLog)
@@ -171,3 +175,68 @@ if(1)
     plot(1, type="n", xaxt = 'n', yaxt = 'n', bty = 'n', xlab="", ylab="", xlim=c(0, 10), ylim=c(0, 10))
     dev.off();
 }
+
+#############################################################################
+## For G1 (K562).
+if(1)
+{
+    NCORES <- 5;
+
+    df.G1.chr22 <- c();
+    for(zoom_rate in c(10, 1, 0.1))
+    {  
+       L=mclapply( 1:NROW(df.G1.info), function(i) {
+          rx <- draw_cor( paste( df.G1.info[i,"Cell"], df.G1.info[i,"Mark"], df.G1.info[i,"Ver"], sep="." ),
+                             df.G1.info[i,"file.pred.bw"],
+                             df.G1.info[i,"file.exp.bw"],
+                             file.ctrl.bw = df.G1.info[i,"file.ctrl.bw"],
+                             file.exp.peak = df.G1.info[i,"file.exp.peak"],
+                             file.unmap.bed = df.G1.info[i,"file.unmap.bed"],
+                             file.black.bed = df.G1.info[i,"file.black.bed"],
+                             file.cell.remove = NULL,
+                             win.size = 1000*zoom_rate,
+                             chr = "chr22",
+                             gplot = TRUE,
+                             overwrite=TRUE,
+                             save.rdata=TRUE);}, mc.cores=NCORES  )
+        df.G1.chr22 <- rbind(df.G1.chr22, data.frame( do.call("rbind", L), win=1000*zoom_rate ) )
+    }
+}
+
+if(1)
+{
+    bLog <- TRUE;
+
+    if(bLog)
+       png("draw-g1-scatter-log.png", width=3.5*900, height=9.5*900)
+    else
+       png("draw-g1-scatter-nonlog.png", width=3.5*900, height=9.5*900)
+
+    lay.heights <- c( rep(1,9), 0.5);
+    lay.widths  <- c( 0.5, rep(1,3) )
+    layout(matrix(c(1:40), ncol=4, byrow=F), widths=lay.widths, heights=lay.heights)
+    mark_order <- c(7,6,5,1,4,3,9,2,8)+1 # The +1 excludes H3K122ac
+
+    for(i in mark_order)
+    {
+        par(mar=c(0,0,0,0), plt=c(0.2, 0.8,0.2, 0.8 ));
+        plot(1, type="n", xaxt = 'n', yaxt = 'n', bty = 'n', xlab="", ylab="", xlim=c(0, 10), ylim=c(0, 10))
+        text(8, 5, df.G1.info[i,"Mark"], cex=10, srt=90)
+    }
+
+    plot(1, type="n", xaxt = 'n', yaxt = 'n', bty = 'n', xlab="", ylab="", xlim=c(0, 10), ylim=c(0, 10))
+
+    for(zoom_rate in c(0.1, 1, 10))
+    {
+        for(i in mark_order)
+       {
+           fig.rdata <- paste( df.G1.info[i,"Cell"], df.G1.info[i,"Mark"], df.G1.info[i,"Ver"], "chr22", paste0("w", zoom_rate , "k"), "png.rdata",sep=".")
+           draw_scatter_subplot(fig.rdata, bLog);
+       }
+       plot(1, type="n", xaxt = 'n', yaxt = 'n', bty = 'n', xlab="", ylab="", xlim=c(0, 10), ylim=c(0, 10))
+       text(5, 8, zoom_rate* 1000, cex=10)
+    }
+    dev.off();
+}
+  
+
