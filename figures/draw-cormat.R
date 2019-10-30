@@ -44,7 +44,7 @@ get_marker_cell_matrix<-function(win.size=1000, idx.col=4)
                 if(NROW(C8)==0)NA else C8))
        }));
        
-   colnames(L) <- c("K562", "GM", "CD4", "HCT", "HELA", "Horse", "Alex", "mESC");
+   colnames(L) <- c("K562", "GM", "HCT", "HELA", "CD4", "Horse", "Alex", "mESC");
    rownames(L) <- as.character(df.K562.chr22$plot)
    
    return(L);

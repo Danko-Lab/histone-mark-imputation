@@ -405,10 +405,16 @@ cat("PNG 2=", file.log.png, "\n");
     return(data.frame(plot=out.prefix, rem.count=NROW(idx.rem), pearson=r.cor[1], spearman=r.cor[2], mad=r.cor[3], JSD=r.cor[4], win.size=win.size, chr=if(is.null(chr))"all" else chr, peak.ext = peak.ext))
 }
 
-comp_cor_coefficient <- function(y.exp, y.pred)
+comp_cor_coefficient <- function(y.exp, y.pred, exclZeros=FALSE)
 {
-    r.cor1 = cor( y.exp, y.pred, method = "pearson" );
-    r.cor2 = cor( y.exp, y.pred, method = "spearman" );
+    if(exclZeros) {
+      indx <- y.exp > 0 & y.pred > 0
+    }
+    else{ 
+      indx <- rep(TRUE, NROW(y.exp))
+    }
+    r.cor1 = cor( y.exp[indx], y.pred[indx], method = "pearson" );
+    r.cor2 = cor( y.exp[indx], y.pred[indx], method = "spearman" );
     r.mad = mad( y.exp -  y.pred );
 
     r.gmic = 0.0;
