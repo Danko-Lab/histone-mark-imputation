@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+TSSs=hg19.gm12878.new_hmm2b.post2.bed
+
+# 0. Get the counts in each TSS.
+R --no-save < getCounts.R
+
+# 1. Merge all TSSs within 600 bp of each other. This distance follows the cutoff in Tome, Tippens, Lis (2018).
+bedtools merge -d 600 -i $TSSs | sort-bed - > hg19.gm12878.TIDs.bed
+
+# 2. For each, find the highest scoring TSS on the plus and minus strand.
+cat $TSSs | awk '($6 == "+") {print $0}' | sort-bed - | bedmap --bp-ovr 1 --max-element --echo hg19.gm12878.TIDs.bed - | sed "s/|/\t/g" | gzip > maxPl.bed.gz
+cat $TSSs | awk '($6 == "-") {print $0}' | sort-bed - | bedmap --bp-ovr 1 --max-element --echo hg19.gm12878.TIDs.bed - | sed "s/|/\t/g" | gzip > maxMn.bed.gz
+
+# 3. put files back together.
+R --no-save < mergePlMn.R
+cat maxPl.filt.bed maxMn.filt.bed | sort-bed - > hg19.gm12878.TIDs.bed 
+
