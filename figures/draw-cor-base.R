@@ -212,7 +212,9 @@ draw_cor <- function( out.prefix, file.pred.bw, file.exp.bw,
             file.unmap.bed = NULL,  
             file.black.bed = NULL, 
             file.cell.remove = NULL,
-            chr = NULL, 
+            chr = NULL,        ## If limiting to just one chrom.
+            chromStart = NULL, ## If using just an interval on chr. Note: Must specify chr, chromStart, and chromEnd or no filtering is done!
+            chromEnd = NULL, 
             gplot = TRUE, 
             overwrite=TRUE,
             save.rdata=FALSE,
@@ -329,6 +331,10 @@ cat("window count2 =", NROW(tb.s1), "\n")
     # 4 chr22 130001 140000   4   0    0
     # 5 chr22 140001 150000   5   0    0
 
+    if(!is.null(chr) & !is.null(chromStart) & !is.null(chromEnd)) {
+      bigtb1 <- bigtb1[bigtb1$chr == chr & bigtb1$start >= chromStart & bigtb1$end < chromEnd,] ## Windows entirely in the region of interest.
+    }
+
     ## the experiment data for each region
     y.win.exp <- bigtb1$exp;
     ## the imputed data for each region
@@ -340,45 +346,6 @@ cat("window count2 =", NROW(tb.s1), "\n")
 
     ##2019/09/19 Remove this filter   
     idx.rem <- c();
-    if(0)
-    {
-    if(!is.null(file.ctrl.bw) && !is.na(file.ctrl.bw) )
-    {
-        y.win.ctrl  <- get_histone_readX( tb.s1[, c(1:3)], file.ctrl.bw, ref.gene.bed)/10;
-        tby <- data.frame(ID=tb.s1[,4], exp=y.win.exp0, ctrl=y.win.ctrl);
-        tby0 <- sqldf("select ID, sum(exp) as exp, sum(ctrl) as ctrl from tby group by ID order by ID");
-        bigtb0 <- sqldf("select chr, start, stop, tbs0.idx, exp, ctrl, (exp+1)/(ctrl+1) as ratio from tbs0, tby0 where tbs0.idx==tby0.ID order by tbs0.idx")
-
-        # ex. bigtb0 
-        #     chr  start   stop idx org ctrl ratio
-        # 1 chr22 100001 110000   1   0    0     1
-        # 2 chr22 110001 120000   2   0    0     1
-        # 3 chr22 120001 130000   3   0    0     1
-        # 4 chr22 130001 140000   4   0    0     1
-        # 5 chr22 140001 150000   5   0    0     1
-        # 6 chr22 150001 160000   6   0    0     1
-        
-        q1=0.99 # 0.05 by default, other 0.99
-        q2=0.99;
-        tbdel <- bigtb0[ bigtb0$exp>quantile(bigtb0$exp, q1) & bigtb0$ratio>quantile(bigtb0$ratio, q2),]
-        #print( tbdel );
-
-        idx.rem <- which( (bigtb0$exp>quantile(bigtb0$exp, q1) & bigtb0$ratio>quantile(bigtb0$ratio, q2)) );
-
-        if(NROW(idx.rem)>0)
-        {
-           #print(idx.rem);    
-           #show( bigtb1[idx.rem,]);
-           y.win.exp <- bigtb1$exp[-idx.rem];
-           y.win.pred <- bigtb1$pred[-idx.rem];
-        }
-        else
-        {
-           y.win.exp <- bigtb1$exp
-           y.win.pred <- bigtb1$pred
-        }   
-    }
-    }
 
 cat("window count 4=", NROW(y.win.pred), "\n")    
     r.cor <- comp_cor_coefficient (y.win.exp, y.win.pred)

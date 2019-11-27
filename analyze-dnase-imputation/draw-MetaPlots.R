@@ -66,6 +66,7 @@ indx <- bf_peaks$pred < th & bf_peaks$org > th
 file.tmp.bed <- write.temp.bed(bf_peaks[indx,], compress=FALSE)
 lrp <- read.table(pipe(paste("bedtools merge -d 1 -i ",  file.tmp.bed)))#, " | sort-bed -")))
 
+save.image("quadrant-coord-data.rdata")
 
 ####################################################
 ##

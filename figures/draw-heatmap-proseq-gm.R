@@ -298,7 +298,7 @@ if(1)
    file.plus.bw  <- "/local/workdir/zw355/proj/prj10-dreg/GM12878/groseq_plus.bigWig"
    file.minus.bw <- "/local/workdir/zw355/proj/prj10-dreg/GM12878/groseq_minus.bigWig"
 
-   tb <- read.table(file.TSS.bed, skip=1)
+   tb <- read.table(file.TSS.bed)
    bed.Tss <- bed.region.temp<-c();
    win.size <- 0
 

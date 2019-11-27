@@ -64,7 +64,7 @@ get_cor_xkb<-function(win.rate=1)
   #tb.hist <- tb.hist[tb.hist$TID==0,]
 
   # G1/chr22
-  r1 <- calculate_matrix(tb.hist, "K562", "H3k27ac",  file.k562.H3k27ac.ctrl.bw,  file.k562.H3k27ac.peak,  chr="chr22", win.size=1000*win.rate);
+  r1 <- calculate_matrix(tb.hist, "K562", "H3k27ac",  file.k562.H3k27ac.ctrl.bw,  file.k562.H3k27ac.peak,  chr="chr22", chromStart=0, chromEnd= win.size=1000*win.rate);
   r2 <- calculate_matrix(tb.hist, "K562", "H3k27me3", file.k562.H3k27me3.ctrl.bw, file.k562.H3k27me3.peak, chr="chr22", win.size=1000*win.rate);
   r3 <- calculate_matrix(tb.hist, "K562", "H3k36me3", file.k562.H3k36me3.ctrl.bw, file.k562.H3k36me3.peak, chr="chr22", win.size=1000*win.rate);
   r4 <- calculate_matrix(tb.hist, "K562", "H3k4me1",  file.k562.H3k4me1.ctrl.bw,  file.k562.H3k4me1.peak,  chr="chr22", win.size=1000*win.rate);
