@@ -29,7 +29,7 @@ combine_res<-function()
 }
 
 
-calculate_matrix<-function(tb.hist, cell, marker, file.hist.ctrl, file.hist.peak, chr="chr22", win.size=10000)
+calculate_matrix<-function(tb.hist, cell, marker, file.hist.ctrl, file.hist.peak, chr="chr22", chromStart= NULL, chromEnd=NULL, win.size=10000)
 {
     tb.hist0 <- tb.hist[tb.hist$Mark==marker & tb.hist$Cell==cell,,drop=F ]
     if(NROW(tb.hist0)<2) return(NULL);
@@ -45,6 +45,8 @@ calculate_matrix<-function(tb.hist, cell, marker, file.hist.ctrl, file.hist.peak
                          file.unmap.bed = file.hg19.unmap.bed,
                          file.black.bed = file.hg19.black.bed, 
                          chr=chr, 
+                         chromStart=chromStart,
+                         chromEnd=chromEnd,
                          win.size=win.size,
                          gplot=FALSE);
          return(rx);
@@ -64,15 +66,15 @@ get_cor_xkb<-function(win.rate=1)
   #tb.hist <- tb.hist[tb.hist$TID==0,]
 
   # G1/chr22
-  r1 <- calculate_matrix(tb.hist, "K562", "H3k27ac",  file.k562.H3k27ac.ctrl.bw,  file.k562.H3k27ac.peak,  chr="chr22", chromStart=0, chromEnd= win.size=1000*win.rate);
-  r2 <- calculate_matrix(tb.hist, "K562", "H3k27me3", file.k562.H3k27me3.ctrl.bw, file.k562.H3k27me3.peak, chr="chr22", win.size=1000*win.rate);
-  r3 <- calculate_matrix(tb.hist, "K562", "H3k36me3", file.k562.H3k36me3.ctrl.bw, file.k562.H3k36me3.peak, chr="chr22", win.size=1000*win.rate);
-  r4 <- calculate_matrix(tb.hist, "K562", "H3k4me1",  file.k562.H3k4me1.ctrl.bw,  file.k562.H3k4me1.peak,  chr="chr22", win.size=1000*win.rate);
-  r5 <- calculate_matrix(tb.hist, "K562", "H3k4me2",  file.k562.H3k4me2.ctrl.bw,  file.k562.H3k4me2.peak,  chr="chr22", win.size=1000*win.rate);
-  r6 <- calculate_matrix(tb.hist, "K562", "H3k4me3",  file.k562.H3k4me3.ctrl.bw,  file.k562.H3k4me3.peak,  chr="chr22", win.size=1000*win.rate);
-  r7 <- calculate_matrix(tb.hist, "K562", "H3k9ac",   file.k562.H3k9ac.ctrl.bw,   file.k562.H3k9ac.peak,   chr="chr22", win.size=1000*win.rate);
-  r8 <- calculate_matrix(tb.hist, "K562", "H3k9me3",  file.k562.H3k9me3.ctrl.bw,  file.k562.H3k9me3.peak,  chr="chr22", win.size=1000*win.rate);
-  r9 <- calculate_matrix(tb.hist, "K562", "H4k20me1", file.k562.H4k20me1.ctrl.bw, file.k562.H4k20me1.peak, chr="chr22", win.size=1000*win.rate);
+  r1 <- calculate_matrix(tb.hist, "K562", "H3k27ac",  file.k562.H3k27ac.ctrl.bw,  file.k562.H3k27ac.peak,  chr="chr22", chromStart=23830526, chromEnd=48129895, win.size=1000*win.rate);
+  r2 <- calculate_matrix(tb.hist, "K562", "H3k27me3", file.k562.H3k27me3.ctrl.bw, file.k562.H3k27me3.peak, chr="chr22", chromStart=23830526, chromEnd=48129895, win.size=1000*win.rate);
+  r3 <- calculate_matrix(tb.hist, "K562", "H3k36me3", file.k562.H3k36me3.ctrl.bw, file.k562.H3k36me3.peak, chr="chr22", chromStart=23830526, chromEnd=48129895, win.size=1000*win.rate);
+  r4 <- calculate_matrix(tb.hist, "K562", "H3k4me1",  file.k562.H3k4me1.ctrl.bw,  file.k562.H3k4me1.peak,  chr="chr22", chromStart=23830526, chromEnd=48129895, win.size=1000*win.rate);
+  r5 <- calculate_matrix(tb.hist, "K562", "H3k4me2",  file.k562.H3k4me2.ctrl.bw,  file.k562.H3k4me2.peak,  chr="chr22", chromStart=23830526, chromEnd=48129895, win.size=1000*win.rate);
+  r6 <- calculate_matrix(tb.hist, "K562", "H3k4me3",  file.k562.H3k4me3.ctrl.bw,  file.k562.H3k4me3.peak,  chr="chr22", chromStart=23830526, chromEnd=48129895, win.size=1000*win.rate);
+  r7 <- calculate_matrix(tb.hist, "K562", "H3k9ac",   file.k562.H3k9ac.ctrl.bw,   file.k562.H3k9ac.peak,   chr="chr22", chromStart=23830526, chromEnd=48129895, win.size=1000*win.rate);
+  r8 <- calculate_matrix(tb.hist, "K562", "H3k9me3",  file.k562.H3k9me3.ctrl.bw,  file.k562.H3k9me3.peak,  chr="chr22", chromStart=23830526, chromEnd=48129895, win.size=1000*win.rate);
+  r9 <- calculate_matrix(tb.hist, "K562", "H4k20me1", file.k562.H4k20me1.ctrl.bw, file.k562.H4k20me1.peak, chr="chr22", chromStart=23830526, chromEnd=48129895, win.size=1000*win.rate);
 
   df.K562.allcomb <- rbind(r1, r2, r3, r4, r5, r6, r7,r8, r9);
 
