@@ -100,7 +100,7 @@ if(1)
     df.cor.10k <- df.cor.1k <- df.cor.100 <- df.cor.10  <-c();
     df.cor.10k <- get_cor_xkb(10);gc();
     df.cor.1k <- get_cor_xkb(1);gc();
-    save(df.cor.10k, df.cor.1k, df.cor.100, df.cor.10, file="calc-comb-GM-K562.rdata");
+#    save(df.cor.10k, df.cor.1k, df.cor.100, df.cor.10, file="calc-comb-GM-K562.rdata");
     df.cor.100 <- get_cor_xkb(0.1);gc();
     df.cor.10 <- get_cor_xkb(0.01);gc();
     save(df.cor.10k, df.cor.1k, df.cor.100, df.cor.10, file="calc-comb-GM-K562.rdata");

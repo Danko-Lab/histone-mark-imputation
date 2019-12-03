@@ -16,7 +16,9 @@ for(zoom_rate in c(10, 1, 0.1, 0.01))
                          file.black.bed = df.G1.info[i,"file.black.bed"],  
                          file.cell.remove = NULL,
                          win.size = 1000*zoom_rate,
-                         chr = "chr22", 
+                         chr = "chr22",
+                         chromStart=23830526,
+                         chromEnd=48129895, 
                          gplot = TRUE, 
                          overwrite=TRUE);}, mc.cores=NCORES )
     df.G1.chr22 <- rbind(df.G1.chr22, data.frame( do.call("rbind", L), win=1000*zoom_rate ) )
@@ -116,7 +118,9 @@ for(zoom_rate in c(0.01, 0.1, 1, 10))
                          file.black.bed = df.Alex.K562.info[i,"file.black.bed"],  
                          file.cell.remove = NULL,
                          win.size = 1000*zoom_rate,
-                         chr = "chr22", 
+                         chr = "chr22",
+                         chromStart=23830526,
+                         chromEnd=48129895, 
                          gplot = TRUE, 
                          overwrite=TRUE);}, mc.cores=NCORES  )
     df.Alex.K562.chr22 <- rbind( df.Alex.K562.chr22, data.frame( do.call("rbind", L), win=1000*zoom_rate ) )
@@ -135,7 +139,9 @@ for(zoom_rate in c(0.01, 0.1, 1, 10))
                          file.black.bed = df.Alex.Mnase.info[i,"file.black.bed"],  
                          file.cell.remove = NULL,
                          win.size = 1000*zoom_rate,
-                         chr = "chr22", 
+                         chr = "chr22",
+                         chromStart=23830526,
+                         chromEnd=48129895, 
                          gplot = TRUE, 
                          overwrite=TRUE);}, mc.cores=NCORES  )
 

@@ -332,7 +332,7 @@ cat("window count2 =", NROW(tb.s1), "\n")
     # 5 chr22 140001 150000   5   0    0
 
     if(!is.null(chr) & !is.null(chromStart) & !is.null(chromEnd)) {
-      bigtb1 <- bigtb1[bigtb1$chr == chr & bigtb1$start >= chromStart & bigtb1$end < chromEnd,] ## Windows entirely in the region of interest.
+      bigtb1 <- bigtb1[bigtb1$chr == chr & bigtb1$start >= chromStart & bigtb1$stop < chromEnd,] ## Windows entirely in the region of interest.
     }
 
     ## the experiment data for each region

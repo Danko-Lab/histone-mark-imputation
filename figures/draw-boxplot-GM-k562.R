@@ -1,13 +1,13 @@
 
-if(0)
+if(1)
 {
   load("calc-comb-GM-K562.rdata");
   df.allcomb <- rbind( df.cor.10k$K562,  df.cor.10k$GM);
   
   load("draw-cor-chr22.rdata");
-  df.K562.chr22<- df.G1.chr22[df.G1.chr22$win.size==10000,] 
-  df.GM.chr22 <- df.GM.chr22[df.GM.chr22$win.size==10000,] 
-  df.Alex.chr22 <- df.Alex.Mnase.chr22[df.Alex.Mnase.chr22$win.size==10000,] 
+  df.K562.chr22<- df.G1.chr22[df.G1.chr22$win.size==1000,] 
+  df.GM.chr22 <- df.GM.chr22[df.GM.chr22$win.size==1000,] 
+  df.Alex.chr22 <- df.Alex.Mnase.chr22[df.Alex.Mnase.chr22$win.size==1000,] 
   
   df.K562.chr22$Mark<- unlist(lapply( as.character(df.K562.chr22$plot), function(str.plot) return(strsplit(str.plot, "\\.")[[1]][2]) ))
   df.GM.chr22$Mark<- unlist(lapply( as.character(df.GM.chr22$plot), function(str.plot) return(strsplit(str.plot, "\\.")[[1]][2]) ))
@@ -21,7 +21,7 @@ if(0)
 #  df.points <- df.points[df.points$Mark!="H4k20me1",]
 #  df.points <- df.points[df.points$Mark!="H3k27me3",]
 
-  pdf("boxplot-histone-allcomb-10kb.pdf");
+  pdf("boxplot-histone-allcomb-10k.pdf");
   
   boxplot( pearson~Mark,data=df.allcomb, main="K562+GM12878",  xlab="Histone", ylab="Pearson Correlation", cex.axis=0.5,ylim=c(0,1), range=0) 
   points(factor(df.points$Mark), df.points$pearson, pch=15, cex=1, col=as.character(df.points$cols))
@@ -45,7 +45,7 @@ if(0)
 }
 
 
-if(1)
+if(0)
 {
     # loading correlations based on raw signals for chr 22. 
     load(file="draw-cor-chr22.rdata")
@@ -85,8 +85,8 @@ if(1)
     df.plot<- df.cor[df.cor$Pred==0, c("pearson", "Mark", "win.size")];
     colnames(df.plot) <- c("Cor", "Mark", "Size" );                    
 
-    df.points <- df.cor [df.cor$Pred==1 ,c("x", "pearson",  "Mark" )];
-    colnames(df.points) <- c("x", "Cor", "Mark"  );                    
+    df.points <- df.cor[df.cor$Pred==1, c("Cell", "pearson",  "Mark" )];
+    colnames(df.points) <- c("Cell", "Cor", "Mark"  );                    
 
     # check the order of plot factor in two data frames. 
     all(levels(df.cor$Mark) == levels(df.points$Mark))
@@ -103,7 +103,7 @@ if(1)
 library(ggplot2)
    ggplot(data = df.plot, aes(x = Size, y = Cor)) + 
      geom_boxplot(aes(fill = Mark), width = 0.8,outlier.shape = NA) +
-     geom_point(data = df.points, size = 1.5, shape=21, colour="black",  show.legend=FALSE, aes(x=x, y=Cor, fill=Mark) ) +
+     geom_point(data = df.points, size = 1.5, shape=21, colour="black",  show.legend=FALSE, aes(x=Cell, y=Cor, fill=Mark) ) +
      scale_fill_manual(values=cols)+
      xlab("Window size") + 
      ylab("Correlation (Pearson)") + 
