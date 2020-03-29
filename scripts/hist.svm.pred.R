@@ -424,9 +424,10 @@ svm_predict_chr_parallel<-function( impute_prefix, file.bw.plus, file.bw.minus, 
         sfExport("file.model.rdata", "file.bw.plus", "file.bw.minus", "impute_prefix", "ncores", "chr", "seq.start", "seq.end", "gpu.idx", "linear_scale" );
 
         fun <- as.function(cpu.fun);
-        environment(fun)<-globalenv();
+        environment(fun) <- globalenv();
 
-        pred.bed <- do.call("rbindlist", sfLapply( gpu.idx, fun));
+        pred.bed <- rbindlist( sfLapply( gpu.idx, fun) );
+        
         sfStop();
     }
     else

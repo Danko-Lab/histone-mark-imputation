@@ -11,6 +11,8 @@ str.chr <- args[5];
 file.histone <- if(is.na(args[6])) NULL else args[6];
 gpu.count <- if(is.na(args[7])) 1 else as.numeric(args[7])
 
+if (file.histone=="NA") file.histone <- NULL
+ 
 cat("MODEL file = ", file.model, "\n");
 cat("PLUS bigwig = ", file.bw.plus, "\n");
 cat("MINUS bigwig = ", file.bw.minus, "\n");

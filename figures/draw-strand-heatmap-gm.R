@@ -179,7 +179,9 @@ for(i in 1:((NROW(tb)/2-1)))
     {   
         cat(i, gap, "\n");
         next;
-    } else {
+    } 
+    else 
+    {
         r0 <- tb[bed.region.temp*2+c(-1:0),];
         r0.max <- r0[ which.max(r0[,5]) , ,drop=F];
         r0.max.center <- (r0.max [1, 3] + r0.max [1, 2])/2
@@ -194,8 +196,11 @@ for(i in 1:((NROW(tb)/2-1)))
         r0.plus <- r0[ r0[,6]=="+", ,drop=F];
         r0.minus <- r0[ r0[,6]=="-", ,drop=F];
         
-        if(r0.plus[1,3] > r0.minus[1,3]) { r.type = 1 } else { r.type = -1 }  #divergent 
-        
+        r.type = 0
+        # if plus strand is great than minus strand ==> divergent=1 
+        if(r0.plus[1,2] >= r0.minus[1,3]) r.type = 1 #divergent 
+        if(r0.plus[1,3] <= r0.minus[1,2]) r.type = -1
+
         gene <- if(!is.na(r0.max[1,4])) r0.max[1,4] else r0.min[1,4];
     
         bed.Tss<-rbind(bed.Tss, data.frame(chr=r0.max[1,1], start=r0.max.center-1000, 
@@ -212,28 +217,30 @@ for(i in 1:((NROW(tb)/2-1)))
 
 bed.Tss$dist <- abs(bed.Tss$dist)
 bed.Tss <- bed.Tss[order(bed.Tss$dist),]
+## remove non-divergent regions
+bed.Tss <- bed.Tss[bed.Tss$type != -1, ]
 
 if(1)
 {
-file.png <- "GM-H3K27ac-strand-heatmap.png"
+file.png <- "GM-H3K27ac-strand-heatmap-TIDs.png"
 heatmap(bed.Tss, file.plus.bw, file.minus.bw, 
         file.gm.H3k27ac.bw, file.gm.H3k27ac.peak, 
         file.gm.H3k27ac.pred.raw, file.gm.H3k27ac.peak, 
         file.png);
 
-file.png <- "GM-H3K4me1-strand-heatmap.png"
+file.png <- "GM-H3K4me1-strand-heatmap-TIDs.png"
 heatmap(bed.Tss, file.plus.bw, file.minus.bw, 
         file.gm.H3k4me1.bw, file.gm.H3k4me1.peak, 
         file.gm.H3k4me1.pred.raw, file.gm.H3k4me1.peak, 
         file.png);
 
-file.png <- "GM-H3K4me2-strand-heatmap.png"
+file.png <- "GM-H3K4me2-strand-heatmap-TIDs.png"
 heatmap(bed.Tss, file.plus.bw, file.minus.bw, 
         file.gm.H3k4me2.bw, file.GM.H3k4me2.peak, 
         file.gm.H3k4me2.pred.raw, file.GM.H3k4me2.peak, 
         file.png);
 
-file.png <- "GM-H3K4me3-strand-heatmap.png"
+file.png <- "GM-H3K4me3-strand-heatmap-TIDs.png"
 heatmap(bed.Tss, file.plus.bw, file.minus.bw, 
         file.gm.H3k4me3.bw, file.gm.H3k4me3.peak, 
         file.gm.H3k4me3.pred.raw, file.gm.H3k4me3.peak, 

@@ -8,25 +8,38 @@ source("hist.param.R");
 #file.rdata.negative defined in "hist.param.R"
 #file.rdata.positive defined in "hist.param.R"
 
-file.mm9.mESC.proseq.minus <- "/fs/cbsudanko/storage/data/mm9/esc/groseq/GSE48895_V6.5_untreated_Minus.bw"
-file.mm9.mESC.proseq.plus  <- "/fs/cbsudanko/storage/data/mm9/esc/groseq/GSE48895_V6.5_untreated_Plus.bw"
+file.mm9.mESC.proseq.minus <- c("/fs/cbsudanko/storage/data/mm9/esc/groseq/GSE48895_V6.5_untreated_Minus.bw",
+                               "/fs/cbsudanko/storage/data/mm9/esc/groseq/GSE27037_MESC_GROseq_minus.bw",
+                               "/workdir/zw355/proj/prj15-histone/train_mm9/GSM1422167_adleman_r1_QC_minus.mm9.bw",
+                               "/workdir/zw355/proj/prj15-histone/train_mm9/GSM1422168_adleman_r2_QC_minus.mm9.bw");
 
-file.mm9.mESC.H3k4me3  <- "../pred-mm9-mESC/mm9.GSM307618_ES.H3K4me3.int.bw"
-file.mm9.mESC.H3k27me3 <- "../pred-mm9-mESC/mm9.GSM307619_ES.H3K27me3.bw"
 
-file.mm9.mESC.dreg <- "../pred-mm9-mESC/GSE48895-mm9.dREG.peak.score.bed.gz"
+file.mm9.mESC.proseq.plus  <- c("/fs/cbsudanko/storage/data/mm9/esc/groseq/GSE48895_V6.5_untreated_Plus.bw",
+                                "/fs/cbsudanko/storage/data/mm9/esc/groseq/GSE27037_MESC_GROseq_plus.bw",
+                                "/workdir/zw355/proj/prj15-histone/train_mm9/GSM1422167_adleman_r1_QC_plus.mm9.bw",
+                                "/workdir/zw355/proj/prj15-histone/train_mm9/GSM1422168_adleman_r2_QC_plus.mm9.bw")
 
-file.mm9.mESC.H3k4me3.peak  <- "../pred-mm9-mESC/mm9.GSM307618_ES.H3K4me3.peak"
-file.mm9.mESC.H3k27me3.peak <- "../pred-mm9-mESC/mm9.GSM307619_ES.H3K27me3.peak"
+file.mm9.mESC.H3k4me3  <- "../mESC-mm9-2018/H3K4me3_WT_merge.bw"
+file.mm9.mESC.H3k27me3 <- "../mESC-mm9-2018/H3K27me3_WT_merge.bw"
 
-file.H3k4me3.model  <- "../models/mESC.H3k4me3.S1.train.rdata";
-file.H3k27me3.model <- "../models/mESC.H3k27me3.S1.train.rdata";
+#file.mm9.mESC.dreg     <- "../pred-mm9-mESC/GSE48895-mm9.dREG.peak.score.bed.gz"
+file.mm9.mESC.dreg     <- "../train_mm9/merge_dreg_peak.bed"
+
+file.mm9.mESC.H3k4me3.peak  <- "../mESC-mm9-2018/H3K4me3_WT_merge.bed"
+file.mm9.mESC.H3k27me3.peak <- "../mESC-mm9-2018/H3K27me3_WT_merge.bed"
+
+file.H3k4me3.model  <- "../models/mESC.comb4.H3k4me3.S1.train.rdata";
+file.H3k27me3.model <- "../models/mESC.comb4.H3k27me3.S1.train.rdata";
+
+file.pos.bed.H3k4me3 <- "../mESC-mm9-2018/ATAC_WT_R.peak.ineresect.bed.gz"
+file.neg.bed.H3k4me3 <- "../mESC-mm9-2018/ATAC_WT_R.peak.complement.bed.gz"
+
+file.pos.bed.H3k27me3 <- "../mESC-mm9-2018/ATAC_WT_R.peak.ineresect.bed.gz"
+file.neg.bed.H3k27me3 <- "../mESC-mm9-2018/ATAC_WT_R.peak.complement.bed.gz"
 
 path.histone="";
 path.proseq="";
 
-
-selectGPUdevice(0);
 
 #training H3k4me3 Model
 if(1)
@@ -44,12 +57,15 @@ if(!file.exists(file.H3k4me3.model))
   print(head(tb))
   print(file.tmp.neg.bed)
 
+  selectGPUdevice(0);
+
   model <- create_train_model( path.proseq, file.mm9.mESC.proseq.plus, file.mm9.mESC.proseq.minus, 
-                file.tmp.neg.bed, file.mm9.mESC.dreg, 
+                file.pos.bed.H3k4me3, file.neg.bed.H3k4me3,
+                ## file.tmp.neg.bed, file.mm9.mESC.dreg, 
                 path.histone, file.mm9.mESC.H3k4me3, 
                 file.mm9.mESC.H3k4me3.peak, ratio = 0.1, 
-                samples=400000, strategy=2, 
-                exclude=c("chr1", "chr2", "chrX", "chrY", "chrM"))
+                samples=750000, strategy=1, 
+                exclude=c("chr1", "chrX", "chrY", "chrM"))
   model <- build_train_model( model )
   model <- svm_train_model(model, gdm, file.H3k4me3.model, ncores=8);
   save(model, file = file.H3k4me3.model);
@@ -84,12 +100,15 @@ if(!file.exists(file.H3k27me3.model))
   tb <- read.table(pipe(paste("bedtools complement -i ",  file.tmp.pos.bed, " -g /fs/cbsudanko/storage/data/mm9/mm9.chromInfo.sorted | sort-bed -")));
   file.tmp.neg.bed <- write.temp.bed(tb, compress=FALSE);
 
+  selectGPUdevice(1);
+
   model <- create_train_model( path.proseq, file.mm9.mESC.proseq.plus, file.mm9.mESC.proseq.minus, 
-                file.tmp.neg.bed, file.mm9.mESC.dreg, 
+                #file.tmp.neg.bed, file.mm9.mESC.dreg, 
+                file.pos.bed.H3k27me3, file.neg.bed.H3k27me3,
                 path.histone, file.mm9.mESC.H3k27me3, 
                 file.mm9.mESC.H3k27me3.peak, ratio = 0.1, 
-                samples=400000, strategy=2, 
-                exclude=c("chr1", "chr2", "chrX", "chrY", "chrM"))
+                samples=400000, strategy=1, 
+                exclude=c("chr1", "chrX", "chrY", "chrM"))
   model <- build_train_model( model )
   model <- svm_train_model(model, gdm, file.H3k27me3.model, ncores=8);
   save(model, file = file.H3k27me3.model);

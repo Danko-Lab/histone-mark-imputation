@@ -149,11 +149,11 @@ writeProseqHeatmap<- function(bed, file.plus.bw, file.minus.bw, png.name, subs= 
     hMinus.rev.log <- log(do.call("rbind", hMinusMatrix.rev )+1);
 
     #            + TSS           - TSS
-    # P+       plus bigWig      reverse(minus bigWig)       
-    # P-       minus bigwig     reverse(plus bigWig)       
+    # plus       plus bigWig      reverse(minus bigWig)       
+    # minus      minus bigwig     reverse(plus bigWig)       
     
-    hmat.plus <- do.call("rbind", lapply(1:NROW(bed), function(i){if(bed[i,6]=="-") hMinus.rev.log[i,] else hPlus.log[i,] }))
-    hmat.minus <- do.call("rbind", lapply(1:NROW(bed), function(i){if(bed[i,6]=="-") hPlus.rev.log[i,] else hMinus.log[i,] }))
+    hmat.plus  <- do.call("rbind", lapply(1:NROW(bed), function(i){if(bed[i,6]=="-") hMinus.rev.log[i,] else hPlus.log[i,] }))
+    hmat.minus <- do.call("rbind", lapply(1:NROW(bed), function(i){if(bed[i,6]=="-") hPlus.rev.log[i,] else hMinus.log[i,]})) 
 
     ## Average by rows of 10.
     navg <- 20 ## Average every navg rows
@@ -342,11 +342,16 @@ if(1)
            r0.minus <- r0[ r0[,6]=="-", ,drop=F];
         
            # if plus strand is great than minus strand ==> divergent=1 
-           if(r0.plus[1,3] > r0.minus[1,3])
-              r.type = 1 #divergent
-           else
-              r.type = -1  #divergent 
+           #if(r0.plus[1,3] > r0.minus[1,3])
+           #   r.type = 1 #divergent
+           #else
+           #   #r.type = -1  #divergent 
         
+           r.type = 0
+           # if plus strand is great than minus strand ==> divergent=1 
+           if(r0.plus[1,2] >= r0.minus[1,3]) r.type = 1 #divergent 
+           if(r0.plus[1,3] <= r0.minus[1,2]) r.type = -1
+
            gene <- if(!is.na(r0.max[1,4])) r0.max[1,4] else r0.min[1,4];
     
            bed.Tss<-rbind(bed.Tss, data.frame(chr=r0.max[1,1], start=r0.max.center-0, 
@@ -360,23 +365,23 @@ if(1)
          bed.region.temp <-c();
       }
    }
- 
+
    bed.Tss$dist <- abs(bed.Tss$dist)
    bed.Tss <- bed.Tss[order(bed.Tss$dist),]
+
+   # only write heatmap for divergent regions
+   sup <- writeProseqHeatmap( bed.Tss[bed.Tss$type != -1,], file.plus.bw, file.minus.bw, "GM-TID")
+
 }
 
-if(1)
+if(0)
 {
     #MNase.path="/fs/cbsudanko/storage/data/hg19/k562/sydh_mnase/"
     #file.MNase.bw <- "wgEncodeSydhNsomeK562Sig.bigWig"
 
     file.dnase.bw = "/fs/cbsudanko/storage/data/hg19/k562/dnase/wgEncodeOpenChromDnaseK562SigV2.bigWig";
     file.dnase.peak = "/fs/cbsudanko/storage/data/hg19/k562/dnase/wgEncodeOpenChromDnaseK562PkV2.narrowPeak.gz";
-
     file.protein.coding <- "./gencode.v19.protein.coding.bed"
 
-    sup <- writeProseqHeatmap( bed.Tss, file.plus.bw, file.minus.bw, "GM-GROseq")
+    sup <- writeProseqHeatmap( bed.Tss, file.plus.bw, file.minus.bw, "GM-TID")
 }
-
-
-
