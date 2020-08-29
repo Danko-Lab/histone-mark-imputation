@@ -132,7 +132,7 @@ bedTools.intersect<-function(bedA, bedB, options="")
   if (is.data.frame(bedA))
   {
     file.a=tempfile(fileext=".bed")
-    write.table(bedA, file = file.a, quote=F, sep="\t", col.names=F,row.names=F)
+    write.bed(bedA, file.a)
   }
   else
     file.a <- bedA;
@@ -140,16 +140,62 @@ bedTools.intersect<-function(bedA, bedB, options="")
   if (is.data.frame(bedB))
   {
     file.b=tempfile(fileext=".bed")
-    write.table(bedB, file = file.b, quote=F, sep="\t", col.names=F,row.names=F)
+    write.bed(bedB, file.b)
   }
   else
     file.b <- bedB;
 
-  res = read.table(pipe(paste("bedtools intersect -a", file.a, "-b", file.b, options )))
+  res = try(read.table(pipe(paste("bedtools intersect -a", file.a, "-b", file.b, options ))), silent = T)
+  if(class(res)=="try-error")
+     res <- NULL;
 
   if(is.data.frame(bedA)) unlink(file.a);
   if(is.data.frame(bedB)) unlink(file.b);
 
+  return(res)
+}
+
+bedTools.complement<-function(bedA, file.genome)
+{
+  options(scipen =99) # not to use scientific notation when writing out
+
+  #create temp files
+  if (is.data.frame(bedA))
+  {
+    file.a=tempfile(fileext=".bed")
+    write.bed(bedA, file.a)
+  }
+  else
+    file.a <- bedA;
+
+  res = read.table(pipe(paste("bedtools complement -i", file.a, "-g", file.genome )))
+
+  if(is.data.frame(bedA)) unlink(file.a);
+
+  return(res)
+  
+}
+
+#betools merge
+bedTools.union<-function(bedA, bedB, options="")
+{
+  options(scipen =99) # not to use scientific notation when writing out
+
+  #create temp files
+  if (!is.data.frame(bedA))
+  	bedA <- read.table(bedA)
+
+  if (!is.data.frame(bedB))
+  	bedB <- read.table(bedB)
+
+  bedA <- rbindlist(list(bedA[,c(1:3)],bedB[,c(1:3)]))
+  fileA=tempfile(fileext=".bed")
+  write.bed(bedA, file = fileA)
+
+  # create the command string and call the command using system()
+  res=read.table(pipe(paste("mergeBed -i ", fileA)))
+
+  unlink(fileA)
   return(res)
 }
 
@@ -161,7 +207,7 @@ bedTools.subtract<-function(bedA, bedB)
   if (is.data.frame(bedA))
   {
     file.a=tempfile(fileext=".bed")
-    write.table(bedA, file = file.a, quote=F, sep="\t", col.names=F,row.names=F)
+    write.bed(bedA, file.a)
   }
   else
     file.a <- bedA;
@@ -169,12 +215,14 @@ bedTools.subtract<-function(bedA, bedB)
   if (is.data.frame(bedB))
   {
     file.b=tempfile(fileext=".bed")
-    write.table(bedB, file = file.b, quote=F, sep="\t", col.names=F,row.names=F)
+    write.bed(bedB, file.b)
   }
   else
     file.b <- bedB;
 
-  res = read.table(pipe(paste("bedtools subtract -a", file.a, "-b", file.b )))
+  res = try(read.table(pipe(paste("bedtools subtract -a", file.a, "-b", file.b ))), silent = T)
+  if(class(res)=="try-error")
+     res <- NULL;
 
   if(is.data.frame(bedA)) unlink(file.a);
   if(is.data.frame(bedB)) unlink(file.b);
@@ -208,6 +256,9 @@ get_histone_read<-function(bedA, file.histone, block=500000, ncores=5)
    na.idx <- which( is.na(bedA[,1]) |  is.na(bedA[,2]) |  is.na(bedA[,3])  )
    if(length(na.idx)>0)
       stop("NA in bedA\n");
+
+   ord.bed <- order(bedA[,1], bedA[,2])
+   bedA <- bedA[ord.bed,];
 
    cpu.fun <- function(idx) {
 
@@ -247,7 +298,9 @@ get_histone_read<-function(bedA, file.histone, block=500000, ncores=5)
    }   
    else
        y <- unlist( lapply(1:ceiling(NROW(bedA)/block), cpu.fun ) );
-   
+
+   y <- y[order(ord.bed)]
+    
    return(y);
 }
 

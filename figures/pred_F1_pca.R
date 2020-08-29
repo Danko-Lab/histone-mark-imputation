@@ -37,6 +37,7 @@ pdf("PC1.PC2.pdf")
 dev.off()
 
 ## Do UMAP on the PCA output.
+require(umap)
 #hm.umap <- umap(nc, init="pca")
 hm.umap <- umap(pca$rotation[,1:40])
 hm.umap_a <- umap(pca_a$rotation[,1:20])
