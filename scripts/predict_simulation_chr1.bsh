@@ -20,10 +20,46 @@ do
    output=H3k4me3.S1.V3.sim-${i}-${r}
    R --vanilla --slave --args  $Model $bw_plus $bw_minus $output chr6_ssto_hap7 $Histone 1 <  demo.hist.pred.chr.R > $output.out
 
+   Model=../models/H3k9ac.S1.V2.train.rdata
+   output=H3k9ac.S1.V3.sim-${i}-${r}
+   R --vanilla --slave --args  $Model $bw_plus $bw_minus $output chr6_ssto_hap7 $Histone 1 <  demo.hist.pred.chr.R > $output.out
+
+   Model=../models/H3k4me2.S1.V2.train.rdata
+   output=H3k4me2.S1.V3.sim-${i}-${r}
+   R --vanilla --slave --args  $Model $bw_plus $bw_minus $output chr6_ssto_hap7 $Histone 1 <  demo.hist.pred.chr.R > $output.out
+
+   Model=../models/H3k4me1.S1.V2.train.rdata
+   output=H3k4me1.S1.V3.sim-${i}-${r}
+   R --vanilla --slave --args  $Model $bw_plus $bw_minus $output chr6_ssto_hap7 $Histone 1 <  demo.hist.pred.chr.R > $output.out
+
+   Model=../models/H3k122ac.S1.V3.train.rdata
+   output=H3k122ac.S1.V3.sim-${i}-${r}
+   R --vanilla --slave --args  $Model $bw_plus $bw_minus $output chr6_ssto_hap7 $Histone 1 <  demo.hist.pred.chr.R > $output.out
+
+   Model=../models/H3k27me3.S1.V3.train.rdata
+   output=H3k27me3.S1.V3.sim-${i}-${r}
+   R --vanilla --slave --args  $Model $bw_plus $bw_minus $output chr6_ssto_hap7 $Histone 1 <  demo.hist.pred.chr.R > $output.out
+
+   Model=../models/H3k36me3.S1.V3.train.rdata
+   output=H3k36me3.S1.V3.sim-${i}-${r}
+   R --vanilla --slave --args  $Model $bw_plus $bw_minus $output chr6_ssto_hap7 $Histone 1 <  demo.hist.pred.chr.R > $output.out
+
+   Model=../models/H4k20me1.S1.V3.train.rdata
+   output=H4k20me1.S1.V3.sim-${i}-${r}
+   R --vanilla --slave --args  $Model $bw_plus $bw_minus $output chr6_ssto_hap7 $Histone 1 <  demo.hist.pred.chr.R > $output.out
+
    bedGraphToBigWig H3k27ac.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed ~/cbsudanko/data/hg19/hg19.chromInfo H3k27ac.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bw
    bedGraphToBigWig H3k4me3.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed ~/cbsudanko/data/hg19/hg19.chromInfo H3k4me3.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bw
+   bedGraphToBigWig H3k9ac.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed ~/cbsudanko/data/hg19/hg19.chromInfo H3k9ac.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bw
+   bedGraphToBigWig H3k4me2.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed ~/cbsudanko/data/hg19/hg19.chromInfo H3k4me2.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bw
+   bedGraphToBigWig H3k4me1.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed ~/cbsudanko/data/hg19/hg19.chromInfo H3k4me1.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bw
+   bedGraphToBigWig H3k122ac.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed ~/cbsudanko/data/hg19/hg19.chromInfo H3k122ac.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bw
 
-   rm H3k27ac.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed H3k4me3.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed
+   bedGraphToBigWig H3k27me3.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed ~/cbsudanko/data/hg19/hg19.chromInfo H3k27me3.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bw
+   bedGraphToBigWig H3k36me3.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed ~/cbsudanko/data/hg19/hg19.chromInfo H3k36me3.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bw
+   bedGraphToBigWig H4k20me1.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed ~/cbsudanko/data/hg19/hg19.chromInfo H4k20me1.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bw
+
+   rm *.S1.V3.sim-${i}-${r}_chr6_ssto_hap7.bed
  done
 done
 
