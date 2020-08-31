@@ -80,4 +80,48 @@ Heatmap(mat_k4me3, cluster_rows = FALSE, cluster_columns = FALSE,
 
 dev.off()
 
+## Is the slope higher for initiation or pausing?
+ad <- alldata
+ad$I <- as.double(as.character(alldata$I))
+ad$R <- as.double(as.character(alldata$R))
+
+## Plot out scatterplots over I and R.
+myCol <- colorRampPalette(c('royalblue', 'white', 'red3'))(NROW(I))
+
+pdf("~/transfer/scatterplots.pdf")
+ #plot(ad$signal~ad$I, pch=19, col=ad$mark)
+ #plot(ad$signal~ad$R, pch=19, col=ad$mark)
+ ylim=c(0, 15000); xlim=c(min(ad$R), max(ad$R))
+
+ for(m in mark) {
+
+ xlim=c(min(ad$R), max(ad$R)); ylim=c(0, 15000)
+ plot(-1, -1, ylim=ylim, xlim=xlim, ylab=paste("Signal", m), xlab= "Pause Release Rate [1/(s, cell)]", log="x")
+ count=1
+ for(i in unique(ad$I)) {
+  points(ad$signal[ad$I == i & ad$mark == m]~ad$R[ad$I == i & ad$mark == m], col= myCol[count], type="b")
+  count=count+1
+ }
+
+ xlim=c(min(ad$R), max(ad$R)); ylim=c(0, 15000)
+ plot(-1, -1, ylim=ylim, xlim=xlim, ylab=paste("Signal", m), xlab= "Initiation Rate [1/(s, cell)]", log="x")
+ count=1
+ for(i in unique(ad$R)) {
+  points(ad$signal[ad$R == i & ad$mark == m]~ad$I[ad$R == i & ad$mark == m], col= myCol[count], type="b")
+  count=count+1
+ }
+
+ 
+ }
+
+dev.off()
+
+h3k4me3_r <- glm(signal~log(I)+log(R), data=ad[ad$mark == "H3k4me3",])
+h3k27ac_r <- glm(signal~log(I)+log(R), data=ad[ad$mark == "H3k27ac",])
+
+summary(h3k4me3_r)
+summary(h3k27ac_r)
+
+confint(h3k4me3_r)
+confint(h3k27ac_r)
 
