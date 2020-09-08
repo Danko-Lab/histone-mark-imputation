@@ -1,12 +1,13 @@
 ## 
 ## R script to analyze simulated data.
 
-mark <- c("H3k27ac", "H3k4me3")
+mark <- c("H3k27ac", "H3k9ac","H3k122ac", "H3k4me3", "H3k4me2", "H3k4me1", "H3k27me3")
 I <- c("1.0", "0.1", "0.01", "0.001")
 R <- c("1.0", "0.1", "0.01", "0.001")
 
 require(bigWig)
 require(ComplexHeatmap)
+require(circlize) # For colorRamp2
 
 getData <- function(m, i, r) {
  filename <- paste("../pred-simulation/",m,".S1.V3.sim-",i,"-",r,"_chr6_ssto_hap7.bw", sep="")
@@ -85,17 +86,20 @@ ad <- alldata
 ad$I <- as.double(as.character(alldata$I))
 ad$R <- as.double(as.character(alldata$R))
 
+#write.table(ad, "~/transfer/ad.rflat") ## For transfering to my PC
+ 
 ## Plot out scatterplots over I and R.
 myCol <- colorRampPalette(c('royalblue', 'white', 'red3'))(NROW(I))
 
-pdf("~/transfer/scatterplots.pdf")
+pdf("~/transfer/scatterplots.pdf", height=15, width=5)
+ par(mfrow=c(7,2))
  #plot(ad$signal~ad$I, pch=19, col=ad$mark)
  #plot(ad$signal~ad$R, pch=19, col=ad$mark)
- ylim=c(0, 15000); xlim=c(min(ad$R), max(ad$R))
 
  for(m in mark) {
 
- xlim=c(min(ad$R), max(ad$R)); ylim=c(0, 15000)
+ xlim=c(min(ad$R), max(ad$R)); 
+ ylim=c(min(ad$signal[ad$mark == m]), max(ad$signal[ad$mark == m]))
  plot(-1, -1, ylim=ylim, xlim=xlim, ylab=paste("Signal", m), xlab= "Pause Release Rate [1/(s, cell)]", log="x")
  count=1
  for(i in unique(ad$I)) {
@@ -103,7 +107,7 @@ pdf("~/transfer/scatterplots.pdf")
   count=count+1
  }
 
- xlim=c(min(ad$R), max(ad$R)); ylim=c(0, 15000)
+ xlim=c(min(ad$I), max(ad$I));
  plot(-1, -1, ylim=ylim, xlim=xlim, ylab=paste("Signal", m), xlab= "Initiation Rate [1/(s, cell)]", log="x")
  count=1
  for(i in unique(ad$R)) {
@@ -116,12 +120,44 @@ pdf("~/transfer/scatterplots.pdf")
 
 dev.off()
 
-h3k4me3_r <- glm(signal~log(I)+log(R), data=ad[ad$mark == "H3k4me3",])
-h3k27ac_r <- glm(signal~log(I)+log(R), data=ad[ad$mark == "H3k27ac",])
+h3k4me3_r <- glm(scale(signal)~log(I)+log(R), data=ad[ad$mark == "H3k4me3",])
+h3k27ac_r <- glm(scale(signal)~log(I)+log(R), data=ad[ad$mark == "H3k27ac",])
+h3k9ac_r <- glm(scale(signal)~log(I)+log(R), data=ad[ad$mark == "H3k9ac",])
+h3k122ac_r <- glm(scale(signal)~log(I)+log(R), data=ad[ad$mark == "H3k122ac",])
+h3k4me2_r <- glm(scale(signal)~log(I)+log(R), data=ad[ad$mark == "H3k4me2",])
+h3k4me1_r <- glm(scale(signal)~log(I)+log(R), data=ad[ad$mark == "H3k4me1",])
+h3k27me3_r <- glm(scale(signal)~log(I)+log(R), data=ad[ad$mark == "H3k27me3",])
+
 
 summary(h3k4me3_r)
 summary(h3k27ac_r)
+summary(h3k9ac_r)
+summary(h3k122ac_r)
+summary(h3k4me2_r)
+summary(h3k4me1_r)
+summary(h3k27me3_r)
+
 
 confint(h3k4me3_r)
 confint(h3k27ac_r)
+confint(h3k9ac_r)
+confint(h3k122ac_r)
+confint(h3k4me2_r)
+confint(h3k4me1_r)
+confint(h3k27me3_r)
+
+#Print out a figure!
+require(jtools)
+
+pdf("Coefficients.Fit.pdf", width=4, height=2)
+plot_summs(h3k4me1_r, h3k4me2_r, h3k4me3_r, h3k27me3_r, plot.distributions = TRUE, model.names=c("H3k4me1", "H3k4me2", "H3k4me3", "H3k27me3"), colors=c("#b38807", "#fb9a99", "#b31b1b", "#4b00b3"))
+plot_summs(h3k27ac_r, h3k9ac_r, h3k122ac_r, plot.distributions = TRUE, model.names=c("H3k27ac", "H3k9ac", "H3k122ac"), colors=c("#007138", "#b30086", "#007171"))
+
+plot_summs(h3k4me1_r, h3k4me2_r, h3k4me3_r, h3k27ac_r, h3k9ac_r, h3k122ac_r, plot.distributions = TRUE)
+plot_summs(h3k4me3_r, h3k27ac_r, plot.distributions = TRUE, model.names=c("H3k4me3", "H3k27ac"))
+dev.off()
+
+
+
+
 
