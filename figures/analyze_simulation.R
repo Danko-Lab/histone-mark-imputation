@@ -147,6 +147,7 @@ confint(h3k4me1_r)
 confint(h3k27me3_r)
 
 #Print out a figure!
+## Key note: This was NOT working on CBSUGRU. I pulled the data into my PC and ran this code there.
 require(jtools)
 
 pdf("Coefficients.Fit.pdf", width=4, height=2)
