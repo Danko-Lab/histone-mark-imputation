@@ -17,6 +17,13 @@ getData <- function(m, i, r) {
  return( data[1] - data[2] ) ## Subtract a comparable sized background region.
 }
 
+getDataBody <- function(m, i, r) {
+ filename <- paste("../pred-simulation/",m,".S1.V3.sim-",i,"-",r,"_chr6_ssto_hap7.bw", sep="")
+ bw <- load.bigWig(filename)
+ bed <- data.frame(chr= rep("chr6_ssto_hap7", 2), chromStart= c(998000, 1998000), chromEnd= c(1002000, 2002000))
+ data <- bed.region.bpQuery.bigWig(bw, bed)
+ return( data[1] - data[2] ) ## Subtract a comparable sized background region.
+}
 
 alldata <- data.frame(expand.grid(I= I, R= R, mark = mark), signal= 0)
 
