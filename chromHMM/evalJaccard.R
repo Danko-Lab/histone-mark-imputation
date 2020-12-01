@@ -13,13 +13,16 @@ require(gridExtra)
 tm <- read.table("~/tmp.chomHMMcomparison.bed.gz")
 
 ## Compute Jaccard using definition here: https://bedtools.readthedocs.io/en/latest/content/tools/jaccard.html. 
+## Pointed out to me on Twitter that this produces values > 1 (but strictly should not). Changed 
+## to the intersection over union, proposed here: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002529. 
+## Presumably the bedtools numbers are a mistake?
 
 ## Column is experimental, row is predicted
 k562 <- NULL
 for(i in 1:18) {
  k562 <- rbind(k562, sapply(c(1:18), 
     function(x) {
-        sum((tm$V3-tm$V2)[tm$V5 == i & tm$V4 == x]) / (sum((tm$V3-tm$V2)[tm$V5 == i | tm$V4 == x]) - sum((tm$V3-tm$V2)[tm$V5 == i & tm$V4 == x]))
+        sum(as.numeric((tm$V3-tm$V2)[tm$V5 == i & tm$V4 == x])) / sum(as.numeric((tm$V3-tm$V2)[tm$V5 == i | tm$V4 == x]) )# - sum((tm$V3-tm$V2)[tm$V5 == i & tm$V4 == x]))
  }))
 }
 
@@ -27,7 +30,7 @@ k562dr <- NULL
 for(i in 1:18) {
  k562dr <- rbind(k562dr, sapply(c(1:18), 
     function(x) {
-        sum((tm$V3-tm$V2)[tm$V5 == i & tm$V6 == x]) / (sum((tm$V3-tm$V2)[tm$V5 == i | tm$V6 == x]) - sum((tm$V3-tm$V2)[tm$V5 == i & tm$V6 == x]))
+        sum(as.numeric((tm$V3-tm$V2)[tm$V5 == i & tm$V6 == x])) / sum(as.numeric((tm$V3-tm$V2)[tm$V5 == i | tm$V6 == x]) )# - sum((tm$V3-tm$V2)[tm$V5 == i & tm$V6 == x]))
  }))
 }
 
@@ -35,7 +38,7 @@ k562pr1 <- NULL
 for(i in 1:18) {
  k562pr1 <- rbind(k562pr1, sapply(c(1:18), 
     function(x) {
-        sum((tm$V3-tm$V2)[tm$V5 == i & tm$V7 == x]) / (sum((tm$V3-tm$V2)[tm$V5 == i | tm$V7 == x]) - sum((tm$V3-tm$V2)[tm$V5 == i & tm$V7 == x]))
+        sum(as.numeric((tm$V3-tm$V2)[tm$V5 == i & tm$V7 == x])) / sum(as.numeric((tm$V3-tm$V2)[tm$V5 == i | tm$V7 == x]) )#- sum((tm$V3-tm$V2)[tm$V5 == i & tm$V7 == x]))
  }))
 }
  
@@ -43,7 +46,7 @@ k562prvdr <- NULL
 for(i in 1:18) {
  k562prvdr <- rbind(k562prvdr, sapply(c(1:18), 
     function(x) {
-        sum((tm$V3-tm$V2)[tm$V6 == i & tm$V4 == x]) / (sum((tm$V3-tm$V2)[tm$V6 == i | tm$V4 == x]) - sum((tm$V3-tm$V2)[tm$V6 == i & tm$V4 == x]))
+        sum(as.numeric((tm$V3-tm$V2)[tm$V6 == i & tm$V4 == x])) / sum(as.numeric((tm$V3-tm$V2)[tm$V6 == i | tm$V4 == x]) )#- sum((tm$V3-tm$V2)[tm$V6 == i & tm$V4 == x]))
  }))
 }
 
@@ -82,30 +85,30 @@ cols=c("#FF0000", "#FF4500", "#FF4500", "#FF4500", "#008000", "#006400", "#00640
 
 pdf("JaccardScatterplot.pdf", width=5, height=5)
 
-plot( sapply(1:NROW(k562), function(i) {k562dr[i,i]}), sapply(1:NROW(k562), function(i) {k562pr1[i,i]}), xlim=c(0,2.2), ylim=c(0,2.2), pch=19, col=cols, xlab="Jaccard(Experimental, Experimental)", ylab="Jaccard(Predicted,Experimental)", cex=3)
+plot( sapply(1:NROW(k562), function(i) {k562dr[i,i]}), sapply(1:NROW(k562), function(i) {k562pr1[i,i]}), xlim=c(0,1), ylim=c(0,1), pch=19, col=cols, xlab="Jaccard(Experimental, Experimental)", ylab="Jaccard(Predicted,Experimental)", cex=3)
 #abline(0,1, lty="dotted", col="light gray")
 #points(k562dr[18,18], k562pr1[18,18], cex=3)
 
-plot( c(k562dr), c(k562pr1), xlim=c(0,2.2), ylim=c(0,2.2), xlab="Jaccard(Experimental, Experimental)", col="light gray", ylab="Jaccard(Predicted,Experimental)")
+plot( c(k562dr), c(k562pr1), xlim=c(0,1), ylim=c(0,1), xlab="Jaccard(Experimental, Experimental)", col="light gray", ylab="Jaccard(Predicted,Experimental)")
 #abline(0,1, lty="dotted", col="light gray")
 points(sapply(1:NROW(k562), function(i) {k562dr[i,i]}), sapply(1:NROW(k562), function(i) {k562pr1[i,i]}), pch=19, col=cols)
 points(k562dr[18,18], k562pr1[18,18])
 
 dev.off()
 
-cor( sapply(1:NROW(k562), function(i) {k562dr[i,i]}), sapply(1:NROW(k562), function(i) {k562pr1[i,i]}))
+cor( sapply(1:NROW(k562), function(i) {k562dr[i,i]}), sapply(1:NROW(k562), function(i) {k562pr1[i,i]}), method="pearson" )
 # 0.9133127 # Spearman
-# 0.9158804 # Pearson
+# 0.9180607 # Pearson
 
-mean(sapply(1:NROW(k562), function(i) {k562pr1[i,i]})-sapply(1:NROW(k562), function(i) {k562dr[i,i]}))
-#[1] -0.07964478
+mean(sapply(1:NROW(k562), function(i) {k562pr1[i,i]})-sapply(1:NROW(k562), function(i) {k562dr[i,i]}), na.rm=TRUE)
+#[1] -0.0795
 
-mean((sapply(1:NROW(k562), function(i) {k562[i,i]})-sapply(1:NROW(k562), function(i) {k562pr1[i,i]}))/ (sapply(1:NROW(k562), function(i) {k562pr1[i,i]})))
+mean((sapply(1:NROW(k562), function(i) {k562[i,i]})-sapply(1:NROW(k562), function(i) {k562pr1[i,i]}))/ (sapply(1:NROW(k562), function(i) {k562pr1[i,i]})), na.rm=TRUE)
 
-median(sapply(1:NROW(k562), function(i) {k562pr1[i,i]})-sapply(1:NROW(k562), function(i) {k562dr[i,i]}))
-#[1] -0.11899
+median(sapply(1:NROW(k562), function(i) {k562pr1[i,i]})-sapply(1:NROW(k562), function(i) {k562dr[i,i]}), na.rm=TRUE)
+#[1] -0.0777
 
-mean(sapply(11:18, function(i) {k562pr1[i,i]})-sapply(11:18, function(i) {k562dr[i,i]}))
+mean(sapply(11:18, function(i) {k562pr1[i,i]})-sapply(11:18, function(i) {k562dr[i,i]}), na.rm=TRUE)
   
 ###################################################################################
 bedtools unionbedg -i MS_GM12878_pred_seg.bed.gz MS_GM12878_org_seg.bed.gz MS_K562_org_seg.bed.gz | gzip > ~/tmp.chomHMMcomparison.bed.gz
