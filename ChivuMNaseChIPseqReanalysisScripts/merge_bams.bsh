@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Define the path for the genome index
+GENOME_INDEX="/local/storage/data/short_read_index/hg19/hg19.diuliaLewis2021/hg19.diulia.fa"
+
+# Create directories for storing the outputs at different stages
+mkdir -p merged_bams
+
+# Step 3: Merge the BAM files based on histone mark, time point, and biological replicate
+for MARK in K27ac K4me3 Input; do
+    for TIME in 0h 1h 4h; do
+        for REPLICATE in r1 r2; do
+            # Collect all the BAM files that match the current histone mark, time point, and replicate
+            FILES=$(ls aligned_bams/*${MARK}_${TIME}_${REPLICATE}*.bam)
+            
+            # Merge the collected BAM files into a single BAM file
+            samtools merge merged_bams/${MARK}_${TIME}_${REPLICATE}_merged.bam $FILES
+        done
+    done
+done
+

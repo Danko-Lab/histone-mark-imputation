@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Define the path for the genome index
+GENOME_INDEX="/local/storage/data/short_read_index/hg19/hg19.diuliaLewis2021/hg19.diulia.fa"
+
+# Create directories for storing the outputs at different stages
+mkdir -p aligned_bams_noTrim
+
+# Step 2: Align the reads using BWA
+for R1 in *R1.fastq.gz; do
+    # Correctly generate the name for the R2 read file
+    R2=${R1/R1./R2.}
+    
+    # Generate output BAM file name
+    OUTPUT_NAME=$(basename $R1)
+    OUTPUT_NAME=${OUTPUT_NAME/_R1.fastq.gz/.bam}
+    
+    # Perform alignment using BWA and create a BAM file
+    bwa mem $GENOME_INDEX $R1 $R2 | samtools view -bS - > aligned_bams_noTrim/$OUTPUT_NAME
+done
+

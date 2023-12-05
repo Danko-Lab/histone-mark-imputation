@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Initialize an empty string to hold the table header
+table="Filename\tCount\tCountHuman\n"
+
+# Loop through each BAM file in te directory
+for filename in *.bam; do
+  # Use samtools and awk to count the lines for each BAM file
+  count=$(samtools view $filename | awk '($3 !~ /chr|*/ && $5 > 0) {count++} END {print count}')
+  countHuman=$(samtools view $filename | awk '($3 ~ /^chr/ && $5 > 0) {count++} END {print count}')
+
+  # Count only properly paired reads
+  #count=$(samtools view -f 0x2 -F 256 $filename | awk '($3 !~ /chr|*/ && $5 > 0) {count++} END {print count}')
+  #countHuman=$(samtools view -f 0x2 -F 256 $filename | awk '($3 ~ /^chr/ && $5 > 0) {count++} END {print count}')
+
+  # No filtering whatsoever 
+  #count=$(samtools view $filename | awk '($3 !~ /chr|*/) {count++} END {print count}')
+  #countHuman=$(samtools view $filename | awk '($3 ~ /^chr/) {count++} END {print count}')
+
+
+  # Append the filename and count to the table string
+  table+="${filename}\t${count}\t${countHuman}\n"
+
+  # To inspect the contig names: 
+  samtools view $filename | awk '($3 !~ /chr|*/ && $5 > 0) {print $3}' | sort | uniq -c > "${filename}.uniqueContigs.txt"
+
+done
+
+# Print the table
+printf "$table"
+

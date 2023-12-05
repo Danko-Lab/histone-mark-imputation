@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Define the path for the genome index
+GENOME_INDEX="/local/storage/data/short_read_index/hg19/hg19.diulia.fa"
+
+# Create directories for storing the outputs at different stages
+mkdir -p trimmed_reads
+
+# Step 1: Trim the Illumina adapters using Trimmomatic
+for R1 in *R1.fastq.gz; do
+    # Correctly generate the name for the R2 read file
+    R2=${R1/R1./R2.}
+    
+    # Run Trimmomatic to trim adapters
+    java -jar /home/cgd24/bin/Trimmomatic-0.39/trimmomatic-0.39.jar PE -phred33 $R1 $R2 \
+        trimmed_reads/${R1} trimmed_reads/${R1/.fastq.gz/_unpaired.fastq.gz} \
+        trimmed_reads/${R2} trimmed_reads/${R2/.fastq.gz/_unpaired.fastq.gz} \
+        ILLUMINACLIP:/home/cgd24/bin/Trimmomatic-0.39/adapters/combined_adapters.fa:2:30:10
+done
+
