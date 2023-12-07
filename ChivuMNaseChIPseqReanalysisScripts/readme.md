@@ -7,3 +7,4 @@ trim_fastq.bsh -- Trims Illumina adapters for all fastq files.
 align_all(_notrim).bsh -- Aligns reads using BWA.  
 merge_bams(_notrim).bsh -- Merges BAM files for two separate sequencing runs for the same sample.   
 getSpikeCounts.bsh -- Counts reads mapping to the human or D Iulia genome.  
+metaPlots.R -- Smple R script that computes/ prints a meta plot from BAMs. Should work with any TSS location file.
